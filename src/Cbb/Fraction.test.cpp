@@ -3,6 +3,8 @@
 
 #include <Cbb/Fraction.hpp>
 
+#include <sstream>
+
 
 using namespace Cbb;
 
@@ -304,4 +306,38 @@ TEST_CASE("Mutiplication", "[Fraction]")
 TEST_CASE("Division", "[Fraction]")
 {
     REQUIRE(Fraction(2, 3) / Fraction(3, 11) == Fraction(22, 9));
+}
+
+TEST_CASE("Serialization", "[Fraction]")
+{
+    SECTION("Output")
+    {
+        const auto f = Fraction(-5, 7);
+
+        std::ostringstream stream;
+        stream << f;
+
+        REQUIRE(stream.str() == "-5/7");
+    }
+    SECTION("Input")
+    {
+        SECTION("No extra whitespace")
+        {
+            std::istringstream stream {"-5/7"};
+
+            Fraction f;
+            stream >> f;
+
+            REQUIRE(f == Fraction(-5, 7));
+        }
+        SECTION("Extra whitespace")
+        {
+            std::istringstream stream {"   -5      /     7     "};
+
+            Fraction f;
+            stream >> f;
+
+            REQUIRE(f == Fraction(-5, 7));
+        }
+    }
 }

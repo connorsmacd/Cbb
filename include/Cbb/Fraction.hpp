@@ -1,6 +1,8 @@
 #pragma once
 
+#include <istream>
 #include <numeric>
+#include <ostream>
 
 
 namespace Cbb {
@@ -16,6 +18,9 @@ namespace Cbb {
         constexpr int den() const noexcept { return d; }
         constexpr int numerator() const noexcept { return num(); }
         constexpr int denominator() const noexcept { return den(); }
+
+        friend std::ostream& operator<< (std::ostream& stream, const Fraction& fraction) noexcept;
+        friend std::istream& operator>> (std::istream& stream, Fraction& fraction) noexcept;
 
     private:
         int n = {},
