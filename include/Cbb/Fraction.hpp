@@ -8,7 +8,7 @@
 namespace Cbb {
 
 
-    class Fraction {
+    class Fraction final {
 
     public:
         constexpr Fraction() = default;
