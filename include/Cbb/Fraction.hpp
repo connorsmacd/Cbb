@@ -12,19 +12,19 @@ namespace Cbb {
 
     public:
         constexpr Fraction() = default;
-        constexpr Fraction (int numerator, int denominator = 1) noexcept;
+        constexpr Fraction (long long numerator, long long denominator = 1) noexcept;
 
-        constexpr int num() const noexcept { return n; }
-        constexpr int den() const noexcept { return d; }
-        constexpr int numerator() const noexcept { return num(); }
-        constexpr int denominator() const noexcept { return den(); }
+        constexpr long long num() const noexcept { return n; }
+        constexpr long long den() const noexcept { return d; }
+        constexpr long long numerator() const noexcept { return num(); }
+        constexpr long long denominator() const noexcept { return den(); }
 
         friend std::ostream& operator<< (std::ostream& stream, const Fraction& fraction) noexcept;
         friend std::istream& operator>> (std::istream& stream, Fraction& fraction) noexcept;
-
+ 
     private:
-        int n = {},
-            d = {};
+        long long n = {},
+                  d = {};
     };
 
     constexpr Fraction operator+ (const Fraction& fraction) noexcept;
@@ -42,10 +42,10 @@ namespace Cbb {
     constexpr bool operator>  (const Fraction& left, const Fraction& right) noexcept;
     constexpr bool operator>= (const Fraction& left, const Fraction& right) noexcept;
 
-    constexpr int num (const Fraction& fraction) noexcept;
-    constexpr int den (const Fraction& fraction) noexcept;
-    constexpr int numerator (const Fraction& fraction) noexcept;
-    constexpr int denominator (const Fraction& fraction) noexcept;
+    constexpr long long num (const Fraction& fraction) noexcept;
+    constexpr long long den (const Fraction& fraction) noexcept;
+    constexpr long long numerator (const Fraction& fraction) noexcept;
+    constexpr long long denominator (const Fraction& fraction) noexcept;
 
     constexpr Fraction reduce (const Fraction& fraction) noexcept;
     constexpr Fraction reciprocal (const Fraction& fraction) noexcept;
@@ -60,7 +60,7 @@ namespace Cbb {
     // ============================== Template and inline definitions ==============================
 
 
-    constexpr Fraction::Fraction (const int numerator, const int denominator) noexcept
+    constexpr Fraction::Fraction (const long long numerator, const long long denominator) noexcept
     {
         if (numerator > 0 || denominator > 0)
         {
@@ -151,22 +151,22 @@ namespace Cbb {
         return decimal(left) >= decimal(right);
     }
 
-    constexpr int num (const Fraction& fraction) noexcept
+    constexpr long long num (const Fraction& fraction) noexcept
     {
         return fraction.num();
     }
 
-    constexpr int den (const Fraction& fraction) noexcept
+    constexpr long long den (const Fraction& fraction) noexcept
     {
         return fraction.den();
     }
 
-    constexpr int numerator (const Fraction& fraction) noexcept
+    constexpr long long numerator (const Fraction& fraction) noexcept
     {
         return num(fraction);
     }
 
-    constexpr int denominator (const Fraction& fraction) noexcept
+    constexpr long long denominator (const Fraction& fraction) noexcept
     {
         return den(fraction);
     }
