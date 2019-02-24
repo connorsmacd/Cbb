@@ -181,7 +181,7 @@ TEST_CASE("A fraction's reciprocal can be calculated", "[Fraction]")
 
 TEST_CASE("A fraction can be converted to a decimal", "[Fraction]")
 {
-    REQUIRE(decimal(Fraction(4, 5)) == 0.8f);
+    REQUIRE(decimal(Fraction(4, 5)) == 0.8L);
 }
 
 TEST_CASE("A fraction can be promoted", "[Fraction]")

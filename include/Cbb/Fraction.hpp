@@ -52,7 +52,7 @@ namespace Cbb {
 
     constexpr Fraction reduce (const Fraction& fraction) noexcept;
     constexpr Fraction reciprocal (const Fraction& fraction) noexcept;
-    constexpr float decimal (const Fraction& fraction) noexcept;
+    constexpr long double decimal (const Fraction& fraction) noexcept;
 
     constexpr bool isPositive (const Fraction& fraction) noexcept;
     constexpr bool isNegative (const Fraction& fraction) noexcept;
@@ -196,9 +196,9 @@ namespace Cbb {
         return {fraction.den(), fraction.num()};
     }
 
-    constexpr float decimal (const Fraction& fraction) noexcept
+    constexpr long double decimal (const Fraction& fraction) noexcept
     {
-        return float(fraction.num()) / float(fraction.den());
+        return static_cast<long double>(fraction.num()) / static_cast<long double>(fraction.den());
     }
 
     constexpr bool isPositive (const Fraction& fraction) noexcept
