@@ -3,6 +3,7 @@
 #include <istream>
 #include <numeric>
 #include <ostream>
+#include <utility>
 
 
 namespace Cbb {
@@ -89,9 +90,11 @@ namespace Cbb {
 
     constexpr Fraction operator+ (const Fraction& augend, const Fraction& addend) noexcept
     {
-        const auto lcm = std::lcm(augend.den(), addend.den());
-
-        return {augend.num() * (lcm / augend.den()) + addend.num() * (lcm / addend.den()), lcm};
+        if (augend.den() == addend.den())
+            return {augend.num() + addend.num(), augend.den()};
+        
+        return {augend.num() * addend.den() + addend.num() * augend.den(),
+                augend.den() * addend.den()};
     }
 
     constexpr Fraction operator- (const Fraction& minuend, const Fraction& subtrahend) noexcept
