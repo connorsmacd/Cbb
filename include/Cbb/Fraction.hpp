@@ -29,7 +29,7 @@ namespace Cbb {
         friend std::istream& operator>> (std::istream& stream, Fraction& fraction) noexcept;
  
     private:
-        long long n = {},
+        long long n = 0,
                   d = 1;
     };
 
