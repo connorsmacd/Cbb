@@ -30,7 +30,7 @@ namespace Cbb {
  
     private:
         long long n = {},
-                  d = {};
+                  d = 1;
     };
 
     constexpr Fraction operator+ (const Fraction& fraction) noexcept;
