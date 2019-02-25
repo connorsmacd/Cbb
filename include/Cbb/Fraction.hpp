@@ -20,6 +20,11 @@ namespace Cbb {
         constexpr long long numerator() const noexcept { return num(); }
         constexpr long long denominator() const noexcept { return den(); }
 
+        constexpr Fraction withNumerator (long long numerator) const noexcept;
+        constexpr Fraction withDenominator (long long denominator) const noexcept;
+        constexpr Fraction withSwitchedSignPosition() const noexcept;
+        constexpr Fraction withMinimalNegativeSigns() const noexcept;
+
         friend std::ostream& operator<< (std::ostream& stream, const Fraction& fraction) noexcept;
         friend std::istream& operator>> (std::istream& stream, Fraction& fraction) noexcept;
  
@@ -55,6 +60,8 @@ namespace Cbb {
     constexpr Fraction reciprocal (const Fraction& fraction) noexcept;
     constexpr long double decimal (const Fraction& fraction) noexcept;
 
+    constexpr unsigned int numNegativeSigns (const Fraction& fraction) noexcept;
+
     constexpr bool isPositive (const Fraction& fraction) noexcept;
     constexpr bool isNegative (const Fraction& fraction) noexcept;
     constexpr bool isInteger (const Fraction& fraction) noexcept;
@@ -76,6 +83,32 @@ namespace Cbb {
             n = -numerator;
             d = -denominator;
         }
+    }
+
+    constexpr Fraction Fraction::withNumerator (const long long numerator) const noexcept
+    {
+        return {numerator, d};
+    }
+
+    constexpr Fraction Fraction::withDenominator (const long long denominator) const noexcept
+    {
+        return {n, denominator};
+    }
+
+    constexpr Fraction Fraction::withSwitchedSignPosition() const noexcept
+    {
+        if ((n > 0 && d < 0) || (n < 0 && d > 0))
+            return {-n, -d};
+        
+        return *this;
+    }
+
+    constexpr Fraction Fraction::withMinimalNegativeSigns() const noexcept
+    {
+        if (2 == numNegativeSigns(*this))
+            return {-n, -d};
+        
+        return *this;
     }
 
     constexpr Fraction operator+ (const Fraction& fraction) noexcept
@@ -202,6 +235,12 @@ namespace Cbb {
     constexpr long double decimal (const Fraction& fraction) noexcept
     {
         return static_cast<long double>(fraction.num()) / static_cast<long double>(fraction.den());
+    }
+
+    constexpr unsigned int numNegativeSigns (const Fraction& fraction) noexcept
+    {
+        return static_cast<unsigned int>(fraction.num() < 0)
+               + static_cast<unsigned int>(fraction.den() < 0);
     }
 
     constexpr bool isPositive (const Fraction& fraction) noexcept

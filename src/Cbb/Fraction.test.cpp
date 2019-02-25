@@ -23,11 +23,6 @@ TEST_CASE("A fraction can be constructed from a numerator and denominator", "[Fr
 
     REQUIRE(f1.num() == 3);
     REQUIRE(f1.den() == 4);
-
-    constexpr auto f2 = Fraction(-3, -4);
-
-    REQUIRE(f2.num() == 3);
-    REQUIRE(f2.den() == 4);
 }
 
 TEST_CASE("A fraction is copy constructable", "[Fraction]")
@@ -158,7 +153,7 @@ TEST_CASE("Equivalent negative fractions with different sign positions are not s
     REQUIRE(notSymbollicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
 }
 
-TEST_CASE("Undefined fractions with indentical numerators and denominators are symbollically equal", "[Fraction]")
+TEST_CASE("Undefined fractions with identical numerators and denominators are symbollically equal", "[Fraction]")
 {
     REQUIRE(symbollicallyEqual(Fraction(4, 0), Fraction(4, 0)));
     REQUIRE_FALSE(notSymbollicallyEqual(Fraction(4, 0), Fraction(4, 0)));
@@ -172,6 +167,32 @@ TEST_CASE("A reducible fraction can be reduced", "[Fraction]")
 TEST_CASE("An already irreducible fraction can be reduced", "[Fraction]")
 {
     REQUIRE(symbollicallyEqual(reduce(Fraction(7, 9)), Fraction(7, 9)));
+}
+
+TEST_CASE("A fraction with the same denominator but different numerator can be created", "[Fraction]")
+{
+    REQUIRE(Fraction(17, 8).withNumerator(9) == Fraction(9, 8));
+}
+
+TEST_CASE("A fraction with the same numerator but different denominator can be created", "[Fraction]")
+{
+    REQUIRE(Fraction(17, 8).withDenominator(11) == Fraction(17, 11));
+}
+
+TEST_CASE("A fraction's sign position can be switched" "[Fraction]")
+{
+    REQUIRE(symbollicallyEqual(Fraction(10, 13).withSwitchedSignPosition(), Fraction(10, 13)));
+    REQUIRE(symbollicallyEqual(Fraction(-10, 13).withSwitchedSignPosition(), Fraction(10, -13)));
+    REQUIRE(symbollicallyEqual(Fraction(10, -13).withSwitchedSignPosition(), Fraction(-10, 13)));
+    REQUIRE(symbollicallyEqual(Fraction(-10, -13).withSwitchedSignPosition(), Fraction(-10, -13)));
+}
+
+TEST_CASE("An equivalent fraction with minimal negative signs can be created", "[Fraction]")
+{
+    REQUIRE(symbollicallyEqual(Fraction(10, 13).withMinimalNegativeSigns(), Fraction(10, 13)));
+    REQUIRE(symbollicallyEqual(Fraction(-10, 13).withMinimalNegativeSigns(), Fraction(-10, 13)));
+    REQUIRE(symbollicallyEqual(Fraction(10, -13).withMinimalNegativeSigns(), Fraction(10, -13)));
+    REQUIRE(symbollicallyEqual(Fraction(-10, -13).withMinimalNegativeSigns(), Fraction(10, 13)));
 }
 
 TEST_CASE("A fraction's reciprocal can be calculated", "[Fraction]")
