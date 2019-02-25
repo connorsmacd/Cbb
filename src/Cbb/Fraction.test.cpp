@@ -58,13 +58,13 @@ TEST_CASE("A fraction can be implicitly converted from an integer", "[Fraction]"
     REQUIRE(f.den() == 1);
 }
 
-TEST_CASE("Symbollically identical fractions are equal", "[Fraction]")
+TEST_CASE("Symbolically identical fractions are equal", "[Fraction]")
 {
     REQUIRE(Fraction(4, 5) == Fraction(4, 5));
     REQUIRE_FALSE(Fraction(4, 5) != Fraction(4, 5));
 }
 
-TEST_CASE("Symbollically different but equivalent fractions are equal", "[Fraction]")
+TEST_CASE("Symbolically different but equivalent fractions are equal", "[Fraction]")
 {
     REQUIRE(Fraction(8, 10) == Fraction(4, 5));
     REQUIRE_FALSE(Fraction(8, 10) != Fraction(4, 5));
@@ -130,38 +130,38 @@ TEST_CASE("Undefined fractions have no valid ordinal comparisons", "[Fraction]")
     REQUIRE_FALSE(Fraction(4, 0) > Fraction(4, 0));
 }
 
-TEST_CASE("Fractions with identical numerators and denominators are symbollically equal", "[Fraction]")
+TEST_CASE("Fractions with identical numerators and denominators are symbolically equal", "[Fraction]")
 {
-    REQUIRE(symbollicallyEqual(Fraction(7, -9), Fraction(7, -9)));
-    REQUIRE_FALSE(notSymbollicallyEqual(Fraction(7, -9), Fraction(7, -9)));
+    REQUIRE(symbolicallyEqual(Fraction(7, -9), Fraction(7, -9)));
+    REQUIRE_FALSE(notSymbolicallyEqual(Fraction(7, -9), Fraction(7, -9)));
 }
 
-TEST_CASE("Equivalent fractions with different numerators and denominators are not symbollically equal", "[Fraction]")
+TEST_CASE("Equivalent fractions with different numerators and denominators are not symbolically equal", "[Fraction]")
 {
-    REQUIRE_FALSE(symbollicallyEqual(Fraction(14, -18), Fraction(7, -9)));
-    REQUIRE(notSymbollicallyEqual(Fraction(14, -18), Fraction(7, -9)));
+    REQUIRE_FALSE(symbolicallyEqual(Fraction(14, -18), Fraction(7, -9)));
+    REQUIRE(notSymbolicallyEqual(Fraction(14, -18), Fraction(7, -9)));
 }
 
 TEST_CASE("Equivalent negative fractions with different sign positions are not symbollicaly equal", "[Fraction]")
 {
-    REQUIRE_FALSE(symbollicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
-    REQUIRE(notSymbollicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
+    REQUIRE_FALSE(symbolicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
+    REQUIRE(notSymbolicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
 }
 
-TEST_CASE("Undefined fractions with identical numerators and denominators are symbollically equal", "[Fraction]")
+TEST_CASE("Undefined fractions with identical numerators and denominators are symbolically equal", "[Fraction]")
 {
-    REQUIRE(symbollicallyEqual(Fraction(4, 0), Fraction(4, 0)));
-    REQUIRE_FALSE(notSymbollicallyEqual(Fraction(4, 0), Fraction(4, 0)));
+    REQUIRE(symbolicallyEqual(Fraction(4, 0), Fraction(4, 0)));
+    REQUIRE_FALSE(notSymbolicallyEqual(Fraction(4, 0), Fraction(4, 0)));
 }
 
 TEST_CASE("A reducible fraction can be reduced", "[Fraction]")
 {
-    REQUIRE(symbollicallyEqual(reduce(Fraction(12, 32)), Fraction(3, 8)));
+    REQUIRE(symbolicallyEqual(reduce(Fraction(12, 32)), Fraction(3, 8)));
 }
 
 TEST_CASE("An already irreducible fraction can be reduced", "[Fraction]")
 {
-    REQUIRE(symbollicallyEqual(reduce(Fraction(7, 9)), Fraction(7, 9)));
+    REQUIRE(symbolicallyEqual(reduce(Fraction(7, 9)), Fraction(7, 9)));
 }
 
 TEST_CASE("A fraction with the same denominator but different numerator can be created", "[Fraction]")
@@ -176,18 +176,18 @@ TEST_CASE("A fraction with the same numerator but different denominator can be c
 
 TEST_CASE("A fraction's sign position can be switched" "[Fraction]")
 {
-    REQUIRE(symbollicallyEqual(Fraction(10, 13).withSwitchedSignPosition(), Fraction(10, 13)));
-    REQUIRE(symbollicallyEqual(Fraction(-10, 13).withSwitchedSignPosition(), Fraction(10, -13)));
-    REQUIRE(symbollicallyEqual(Fraction(10, -13).withSwitchedSignPosition(), Fraction(-10, 13)));
-    REQUIRE(symbollicallyEqual(Fraction(-10, -13).withSwitchedSignPosition(), Fraction(-10, -13)));
+    REQUIRE(symbolicallyEqual(Fraction(10, 13).withSwitchedSignPosition(), Fraction(10, 13)));
+    REQUIRE(symbolicallyEqual(Fraction(-10, 13).withSwitchedSignPosition(), Fraction(10, -13)));
+    REQUIRE(symbolicallyEqual(Fraction(10, -13).withSwitchedSignPosition(), Fraction(-10, 13)));
+    REQUIRE(symbolicallyEqual(Fraction(-10, -13).withSwitchedSignPosition(), Fraction(-10, -13)));
 }
 
 TEST_CASE("An equivalent fraction with minimal negative signs can be created", "[Fraction]")
 {
-    REQUIRE(symbollicallyEqual(Fraction(10, 13).withMinimalNegativeSigns(), Fraction(10, 13)));
-    REQUIRE(symbollicallyEqual(Fraction(-10, 13).withMinimalNegativeSigns(), Fraction(-10, 13)));
-    REQUIRE(symbollicallyEqual(Fraction(10, -13).withMinimalNegativeSigns(), Fraction(10, -13)));
-    REQUIRE(symbollicallyEqual(Fraction(-10, -13).withMinimalNegativeSigns(), Fraction(10, 13)));
+    REQUIRE(symbolicallyEqual(Fraction(10, 13).withMinimalNegativeSigns(), Fraction(10, 13)));
+    REQUIRE(symbolicallyEqual(Fraction(-10, 13).withMinimalNegativeSigns(), Fraction(-10, 13)));
+    REQUIRE(symbolicallyEqual(Fraction(10, -13).withMinimalNegativeSigns(), Fraction(10, -13)));
+    REQUIRE(symbolicallyEqual(Fraction(-10, -13).withMinimalNegativeSigns(), Fraction(10, 13)));
 }
 
 TEST_CASE("A fraction's reciprocal can be calculated", "[Fraction]")

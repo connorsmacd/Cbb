@@ -48,8 +48,8 @@ namespace Cbb {
     constexpr bool operator>  (const Fraction& left, const Fraction& right) noexcept;
     constexpr bool operator>= (const Fraction& left, const Fraction& right) noexcept;
 
-    constexpr bool symbollicallyEqual (const Fraction& left, const Fraction& right) noexcept;
-    constexpr bool notSymbollicallyEqual (const Fraction& left, const Fraction& right) noexcept;
+    constexpr bool symbolicallyEqual (const Fraction& left, const Fraction& right) noexcept;
+    constexpr bool notSymbolicallyEqual (const Fraction& left, const Fraction& right) noexcept;
 
     constexpr long long num (const Fraction& fraction) noexcept;
     constexpr long long den (const Fraction& fraction) noexcept;
@@ -184,14 +184,14 @@ namespace Cbb {
         return left.num() * right.den() >= right.num() * left.den();
     }
 
-    constexpr bool symbollicallyEqual (const Fraction& left, const Fraction& right) noexcept
+    constexpr bool symbolicallyEqual (const Fraction& left, const Fraction& right) noexcept
     {
         return left.num() == right.num() && left.den() == right.den();
     }
 
-    constexpr bool notSymbollicallyEqual (const Fraction& left, const Fraction& right) noexcept
+    constexpr bool notSymbolicallyEqual (const Fraction& left, const Fraction& right) noexcept
     {
-        return ! symbollicallyEqual(left, right);
+        return ! symbolicallyEqual(left, right);
     }
 
     constexpr long long num (const Fraction& fraction) noexcept
