@@ -9,12 +9,12 @@
 using namespace Cbb;
 
 
-TEST_CASE("A fraction is default constructable and 0 initializes members", "[Fraction]")
+TEST_CASE("A fraction is default constructable to 0/1", "[Fraction]")
 {
     constexpr auto f = Fraction();
 
-    REQUIRE(f.num() == int{});
-    REQUIRE(f.den() == int{});
+    REQUIRE(f.num() == 0);
+    REQUIRE(f.den() == 1);
 }
 
 TEST_CASE("A fraction can be constructed from a numerator and denominator", "[Fraction]")
