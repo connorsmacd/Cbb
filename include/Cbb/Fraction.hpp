@@ -91,18 +91,18 @@ namespace Cbb {
 
     constexpr Fraction Fraction::withSwitchedSignPosition() const noexcept
     {
-        if ((n > 0 && d < 0) || (n < 0 && d > 0))
-            return {-n, -d};
+        if (isPositive(*this))
+            return *this;
         
-        return *this;
+        return {-n, -d};
     }
 
     constexpr Fraction Fraction::withMinimalNegativeSigns() const noexcept
     {
-        if (2 == numNegativeSigns(*this))
-            return {-n, -d};
+        if (numNegativeSigns(*this) < 2)
+            return *this;
         
-        return *this;
+        return {-n, -d};
     }
 
     constexpr Fraction operator+ (const Fraction& fraction) noexcept
