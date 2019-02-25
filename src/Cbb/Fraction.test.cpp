@@ -48,11 +48,6 @@ TEST_CASE("A fraction can be implicitly converted from a numerator and denominat
 
     REQUIRE(f1.num() == 3);
     REQUIRE(f1.den() == 4);
-
-    constexpr Fraction f2 = {-3, -4};
-
-    REQUIRE(f2.num() == 3);
-    REQUIRE(f2.den() == 4);
 }
 
 TEST_CASE("A fraction can be implicitly converted from an integer", "[Fraction]")
@@ -216,40 +211,66 @@ TEST_CASE("A fraction can be negated", "[Fraction]")
     REQUIRE(-Fraction(-7, 10) == Fraction(7, 10));
 }
 
+TEST_CASE("A fraction with both a positive numerator and denominator has 0 negative signs", "[Fraction]")
+{
+    REQUIRE(numNegativeSigns(Fraction(1, 6)) == 0);
+}
+
+TEST_CASE("A fraction with a negative numerator and positive denominator has 1 negative signs", "[Fraction]")
+{
+    REQUIRE(numNegativeSigns(Fraction(-1, 6)) == 1);
+}
+
+TEST_CASE("A fraction with a positive numerator and negative denominator has 1 negative signs", "[Fraction]")
+{
+    REQUIRE(numNegativeSigns(Fraction(1, -6)) == 1);
+}
+
+TEST_CASE("A fraction with both a negative numerator and denominator has 2 negative signs", "[Fraction]")
+{
+    REQUIRE(numNegativeSigns(Fraction(-1, -6)) == 2);
+}
+
 TEST_CASE("A fraction with both a positive numerator and denominator is positive", "[Fraction]")
 {
     REQUIRE(isPositive(Fraction(1, 6)));
     REQUIRE_FALSE(isNegative(Fraction(1, 6)));
+    REQUIRE_FALSE(isZero(Fraction(1, 6)));
 }
 
 TEST_CASE("A fraction with a negative numerator and positive denominator is negative", "[Fraction]")
 {
     REQUIRE_FALSE(isPositive(Fraction(-1, 6)));
     REQUIRE(isNegative(Fraction(-1, 6)));
+    REQUIRE_FALSE(isZero(Fraction(-1, 6)));
 }
 
 TEST_CASE("A fraction with a positive numerator and negative denominator is negative", "[Fraction]")
 {
     REQUIRE_FALSE(isPositive(Fraction(1, -6)));
     REQUIRE(isNegative(Fraction(1, -6)));
+    REQUIRE_FALSE(isZero(Fraction(1, -6)));
 }
 
 TEST_CASE("A fraction with both a negative numerator and denominator is positive", "[Fraction]")
 {
     REQUIRE(isPositive(Fraction(-1, -6)));
     REQUIRE_FALSE(isNegative(Fraction(-1, -6)));
+    REQUIRE_FALSE(isZero(Fraction(-1, -6)));
 }
 
 TEST_CASE("A zero fraction is neither negative nor positive", "[Fraction]")
 {
     REQUIRE_FALSE(isPositive(Fraction(0, 2)));
     REQUIRE_FALSE(isNegative(Fraction(0, 2)));
+    REQUIRE(isZero(Fraction(0, 2)));
 }
 
 TEST_CASE("An undefined fraction is neither negative nor positive", "[Fraction]")
 {
     REQUIRE_FALSE(isPositive(Fraction(2, 0)));
     REQUIRE_FALSE(isNegative(Fraction(2, 0)));
+    REQUIRE_FALSE(isZero(Fraction(2, 0)));
 }
 
 TEST_CASE("A fraction with a numerator that divides the denominator is an integer", "[Fraction]")
@@ -267,14 +288,16 @@ TEST_CASE("An undefined fraction is not an integer", "[Fraction]")
     REQUIRE_FALSE(isInteger(Fraction(9, 0)));
 }
 
-TEST_CASE("A fraction with a zero denominator is undefined", "[Fraction]")
+TEST_CASE("A fraction with a non-zero denominator is defined", "[Fraction]")
 {
-    REQUIRE(isUndefined(Fraction(4, 0)));
+    REQUIRE(isDefined(Fraction(-50, 3)));
+    REQUIRE_FALSE(isUndefined(Fraction(-50, 3)));
 }
 
-TEST_CASE("A fraction with a non-zero denominator is not undefined", "[Fraction]")
+TEST_CASE("A fraction with a zero denominator is undefined", "[Fraction]")
 {
-    REQUIRE_FALSE(isUndefined(Fraction(-50, 3)));
+    REQUIRE_FALSE(isDefined(Fraction(4, 0)));
+    REQUIRE(isUndefined(Fraction(4, 0)));
 }
 
 TEST_CASE("Fractions with a common denominator can be added", "[Fraction]")

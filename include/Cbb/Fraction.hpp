@@ -64,7 +64,9 @@ namespace Cbb {
 
     constexpr bool isPositive (const Fraction& fraction) noexcept;
     constexpr bool isNegative (const Fraction& fraction) noexcept;
+    constexpr bool isZero (const Fraction& fraction) noexcept;
     constexpr bool isInteger (const Fraction& fraction) noexcept;
+    constexpr bool isDefined (const Fraction& fraction) noexcept;
     constexpr bool isUndefined (const Fraction& fraction) noexcept;
 
 
@@ -72,17 +74,9 @@ namespace Cbb {
 
 
     constexpr Fraction::Fraction (const long long numerator, const long long denominator) noexcept
+        : n {numerator},
+          d {denominator}
     {
-        if (numerator > 0 || denominator > 0)
-        {
-            n = numerator;
-            d = denominator;
-        }
-        else
-        {
-            n = -numerator;
-            d = -denominator;
-        }
     }
 
     constexpr Fraction Fraction::withNumerator (const long long numerator) const noexcept
@@ -150,7 +144,7 @@ namespace Cbb {
         if (isUndefined(left) || isUndefined(right))
             return false;
 
-        return decimal(left) == decimal(right);
+        return left.num() * right.den() == right.num() * left.den();
     }
 
     constexpr bool operator!= (const Fraction& left, const Fraction& right) noexcept
@@ -163,7 +157,7 @@ namespace Cbb {
         if (isUndefined(left) || isUndefined(right))
             return false;
 
-        return decimal(left) < decimal(right);
+        return left.num() * right.den() < right.num() * left.den();
     }
 
     constexpr bool operator<= (const Fraction& left, const Fraction& right) noexcept
@@ -171,7 +165,7 @@ namespace Cbb {
         if (isUndefined(left) || isUndefined(right))
             return false;
 
-        return decimal(left) <= decimal(right);
+        return left.num() * right.den() <= right.num() * left.den();
     }
 
     constexpr bool operator> (const Fraction& left, const Fraction& right) noexcept
@@ -179,7 +173,7 @@ namespace Cbb {
         if (isUndefined(left) || isUndefined(right))
             return false;
 
-        return decimal(left) > decimal(right);
+        return left.num() * right.den() > right.num() * left.den();
     }
 
     constexpr bool operator>= (const Fraction& left, const Fraction& right) noexcept
@@ -187,7 +181,7 @@ namespace Cbb {
         if (isUndefined(left) || isUndefined(right))
             return false;
 
-        return decimal(left) >= decimal(right);
+        return left.num() * right.den() >= right.num() * left.den();
     }
 
     constexpr bool symbollicallyEqual (const Fraction& left, const Fraction& right) noexcept
@@ -224,7 +218,7 @@ namespace Cbb {
     {
         const auto gcd = std::gcd(fraction.num(), fraction.den());
 
-        return {fraction.num() / gcd, fraction.den() / gcd};
+        return Fraction(fraction.num() / gcd, fraction.den() / gcd).withMinimalNegativeSigns();
     }
 
     constexpr Fraction reciprocal (const Fraction& fraction) noexcept
@@ -239,18 +233,24 @@ namespace Cbb {
 
     constexpr unsigned int numNegativeSigns (const Fraction& fraction) noexcept
     {
-        return static_cast<unsigned int>(fraction.num() < 0)
-               + static_cast<unsigned int>(fraction.den() < 0);
+        return ((fraction.num() < 0) ? 1 : 0) + ((fraction.den() < 0) ? 1 : 0);
     }
 
     constexpr bool isPositive (const Fraction& fraction) noexcept
     {
-        return fraction.num() > 0 && fraction.den() > 0;
+        return (fraction.num() > 0 && fraction.den() > 0)
+               || (fraction.num() < 0 && fraction.den() < 0);
     }
 
     constexpr bool isNegative (const Fraction& fraction) noexcept
     {
-        return fraction.num() < 0 || fraction.den() < 0;
+        return (fraction.num() > 0 && fraction.den() < 0)
+               || (fraction.num() < 0 && fraction.den() > 0);
+    }
+
+    constexpr bool isZero (const Fraction& fraction) noexcept
+    {
+        return 0 == fraction.num() && isDefined(fraction);
     }
 
     constexpr bool isInteger (const Fraction& fraction) noexcept
@@ -258,9 +258,14 @@ namespace Cbb {
         return 0 == fraction.num() % fraction.den();
     }
 
+    constexpr bool isDefined (const Fraction& fraction) noexcept
+    {
+        return 0 != fraction.den();
+    }
+
     constexpr bool isUndefined (const Fraction& fraction) noexcept
     {
-        return 0 == fraction.den();
+        return ! isDefined(fraction);
     }
 
 
