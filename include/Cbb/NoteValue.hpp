@@ -180,7 +180,7 @@ constexpr Fraction relativeValue(const NoteValue::Base base) noexcept
 
 constexpr Fraction calculateTupletAugmentation(const Tuplet tuplet) noexcept
 {
-    return {2, static_cast<long long>(tuplet)};
+    return {2, tuplet};
 }
 
 constexpr Fraction calculateDotAugmentation(const unsigned int numDots) noexcept
