@@ -118,7 +118,7 @@ TEST_CASE("Undefined fractions have no valid ordinal comparisons", "[Fraction]")
     REQUIRE_FALSE(Fraction(4, 5) <= Fraction(4, 0));
     REQUIRE_FALSE(Fraction(4, 5) >= Fraction(4, 0));
     REQUIRE_FALSE(Fraction(4, 5) > Fraction(4, 0));
-    
+
     REQUIRE_FALSE(Fraction(4, 0) < Fraction(4, 5));
     REQUIRE_FALSE(Fraction(4, 0) <= Fraction(4, 5));
     REQUIRE_FALSE(Fraction(4, 0) >= Fraction(4, 5));
@@ -130,25 +130,30 @@ TEST_CASE("Undefined fractions have no valid ordinal comparisons", "[Fraction]")
     REQUIRE_FALSE(Fraction(4, 0) > Fraction(4, 0));
 }
 
-TEST_CASE("Fractions with identical numerators and denominators are symbolically equal", "[Fraction]")
+TEST_CASE("Fractions with identical numerators and denominators are symbolically equal",
+          "[Fraction]")
 {
     REQUIRE(symbolicallyEqual(Fraction(7, -9), Fraction(7, -9)));
     REQUIRE_FALSE(notSymbolicallyEqual(Fraction(7, -9), Fraction(7, -9)));
 }
 
-TEST_CASE("Equivalent fractions with different numerators and denominators are not symbolically equal", "[Fraction]")
+TEST_CASE(
+    "Equivalent fractions with different numerators and denominators are not symbolically equal",
+    "[Fraction]")
 {
     REQUIRE_FALSE(symbolicallyEqual(Fraction(14, -18), Fraction(7, -9)));
     REQUIRE(notSymbolicallyEqual(Fraction(14, -18), Fraction(7, -9)));
 }
 
-TEST_CASE("Equivalent negative fractions with different sign positions are not symbollicaly equal", "[Fraction]")
+TEST_CASE("Equivalent negative fractions with different sign positions are not symbollicaly equal",
+          "[Fraction]")
 {
     REQUIRE_FALSE(symbolicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
     REQUIRE(notSymbolicallyEqual(Fraction(7, -9), Fraction(-7, 9)));
 }
 
-TEST_CASE("Undefined fractions with identical numerators and denominators are symbolically equal", "[Fraction]")
+TEST_CASE("Undefined fractions with identical numerators and denominators are symbolically equal",
+          "[Fraction]")
 {
     REQUIRE(symbolicallyEqual(Fraction(4, 0), Fraction(4, 0)));
     REQUIRE_FALSE(notSymbolicallyEqual(Fraction(4, 0), Fraction(4, 0)));
@@ -164,17 +169,19 @@ TEST_CASE("An already irreducible fraction can be reduced", "[Fraction]")
     REQUIRE(symbolicallyEqual(reduce(Fraction(7, 9)), Fraction(7, 9)));
 }
 
-TEST_CASE("A fraction with the same denominator but different numerator can be created", "[Fraction]")
+TEST_CASE("A fraction with the same denominator but different numerator can be created",
+          "[Fraction]")
 {
     REQUIRE(Fraction(17, 8).withNumerator(9) == Fraction(9, 8));
 }
 
-TEST_CASE("A fraction with the same numerator but different denominator can be created", "[Fraction]")
+TEST_CASE("A fraction with the same numerator but different denominator can be created",
+          "[Fraction]")
 {
     REQUIRE(Fraction(17, 8).withDenominator(11) == Fraction(17, 11));
 }
 
-TEST_CASE("A fraction's sign position can be switched" "[Fraction]")
+TEST_CASE("A fraction's sign position can be switched", "[Fraction]")
 {
     REQUIRE(symbolicallyEqual(Fraction(10, 13).withSwitchedSignPosition(), Fraction(10, 13)));
     REQUIRE(symbolicallyEqual(Fraction(-10, 13).withSwitchedSignPosition(), Fraction(10, -13)));
@@ -211,22 +218,26 @@ TEST_CASE("A fraction can be negated", "[Fraction]")
     REQUIRE(-Fraction(-7, 10) == Fraction(7, 10));
 }
 
-TEST_CASE("A fraction with both a positive numerator and denominator has 0 negative signs", "[Fraction]")
+TEST_CASE("A fraction with both a positive numerator and denominator has 0 negative signs",
+          "[Fraction]")
 {
     REQUIRE(numNegativeSigns(Fraction(1, 6)) == 0);
 }
 
-TEST_CASE("A fraction with a negative numerator and positive denominator has 1 negative signs", "[Fraction]")
+TEST_CASE("A fraction with a negative numerator and positive denominator has 1 negative signs",
+          "[Fraction]")
 {
     REQUIRE(numNegativeSigns(Fraction(-1, 6)) == 1);
 }
 
-TEST_CASE("A fraction with a positive numerator and negative denominator has 1 negative signs", "[Fraction]")
+TEST_CASE("A fraction with a positive numerator and negative denominator has 1 negative signs",
+          "[Fraction]")
 {
     REQUIRE(numNegativeSigns(Fraction(1, -6)) == 1);
 }
 
-TEST_CASE("A fraction with both a negative numerator and denominator has 2 negative signs", "[Fraction]")
+TEST_CASE("A fraction with both a negative numerator and denominator has 2 negative signs",
+          "[Fraction]")
 {
     REQUIRE(numNegativeSigns(Fraction(-1, -6)) == 2);
 }
@@ -278,7 +289,8 @@ TEST_CASE("A fraction with a numerator that divides the denominator is an intege
     REQUIRE(isInteger(Fraction(4, 2)));
 }
 
-TEST_CASE("A fraction with a numerator that does not divide the denominator is not an integer", "[Fraction]")
+TEST_CASE("A fraction with a numerator that does not divide the denominator is not an integer",
+          "[Fraction]")
 {
     REQUIRE_FALSE(isInteger(Fraction(2, 5)));
 }
@@ -342,7 +354,7 @@ TEST_CASE("A fraction can be serialized", "[Fraction]")
 
 TEST_CASE("A fraction can be deserialized", "[Fraction]")
 {
-    std::istringstream stream {" -5 / 7 "};
+    std::istringstream stream{" -5 / 7 "};
 
     Fraction f;
     stream >> f;
