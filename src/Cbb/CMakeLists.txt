@@ -1,4 +1,4 @@
-add_library(Cbb Fraction.cpp Midi.cpp NoteValue.cpp Tuning.cpp)
+add_library(Cbb Fraction.cpp Midi.cpp NoteValue.cpp PitchClass.cpp Tuning.cpp)
 target_include_directories(Cbb PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../include)
 target_compile_features(Cbb PUBLIC cxx_std_17)
 add_library(Cbb::Cbb ALIAS Cbb)
@@ -14,3 +14,7 @@ add_test(NAME MidiTest COMMAND MidiTest)
 add_executable(NoteValueTest NoteValue.test.cpp)
 target_link_libraries(NoteValueTest PUBLIC Cbb Catch2::Catch2)
 add_test(NAME NoteValueTest COMMAND NoteValueTest)
+
+add_executable(PitchClassTest PitchClass.test.cpp)
+target_link_libraries(PitchClassTest PUBLIC Cbb Catch2::Catch2)
+add_test(NAME PitchClassTest COMMAND PitchClassTest)
