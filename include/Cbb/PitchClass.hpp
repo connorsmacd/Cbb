@@ -46,12 +46,12 @@ constexpr bool operator!=(const PitchClassLabel& left, const PitchClassLabel& ri
 
 constexpr int toPitchClass(const PitchClassLabel label) noexcept
 {
-    const auto r = (label.letter + label.accidental) % 12;
+    const auto remainder = (label.letter + label.accidental) % 12;
 
-    if (r < 0)
-        return r + 12;
+    if (remainder < 0)
+        return remainder + 12;
 
-    return r;
+    return remainder;
 }
 
 
