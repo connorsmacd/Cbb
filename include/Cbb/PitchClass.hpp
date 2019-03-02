@@ -10,7 +10,7 @@ enum Letter { C = 0, D = 2, E = 4, F = 5, G = 7, A = 9, B = 11 };
 
 enum Accidental { doubleFlat = -2, flat, natural, sharp, doubleSharp };
 
-struct PitchClassLabel {
+struct PitchClassLabel final {
     Letter letter = C;
     Accidental accidental = natural;
 
