@@ -88,7 +88,7 @@ constexpr Fraction calculateTupletAugmentation(Tuplet tuplet) noexcept;
 constexpr Fraction calculateDotAugmentation(unsigned int numDots) noexcept;
 
 
-// ============================== Template and inline definitions ==============================
+// ================================ Template and inline definitions ================================
 
 
 constexpr NoteValue::NoteValue(const Base base,

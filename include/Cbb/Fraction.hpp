@@ -69,7 +69,7 @@ constexpr bool isDefined(const Fraction& fraction) noexcept;
 constexpr bool isUndefined(const Fraction& fraction) noexcept;
 
 
-// ============================== Template and inline definitions ==============================
+// ================================ Template and inline definitions ================================
 
 
 constexpr Fraction::Fraction(const long long numerator, const long long denominator) noexcept :
