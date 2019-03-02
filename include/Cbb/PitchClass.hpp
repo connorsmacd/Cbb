@@ -1,5 +1,4 @@
-#ifndef CBB_PITCH_CLASS_HPP_INCLUDED
-#define CBB_PITCH_CLASS_HPP_INCLUDED
+#pragma once
 
 #include <string>
 
@@ -56,6 +55,3 @@ constexpr int toPitchClass(const PitchClassLabel label) noexcept
 
 
 }; // namespace Cbb
-
-
-#endif
