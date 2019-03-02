@@ -145,7 +145,7 @@ constexpr bool notSymbolicallyEqual(const NoteValue& left, const NoteValue& righ
     return !symbolicallyEqual(left, right);
 }
 
-constexpr Fraction relativeValue(const NoteValue::Base base) noexcept
+constexpr Fraction relativeValue(const NoteValueBase base) noexcept
 {
     switch (base)
     {
