@@ -1,4 +1,4 @@
-add_library(Cbb Fraction.cpp NoteValue.cpp)
+add_library(Cbb Fraction.cpp NoteValue.cpp Tuning.cpp)
 target_include_directories(Cbb PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../include)
 target_compile_features(Cbb PUBLIC cxx_std_17)
 add_library(Cbb::Cbb ALIAS Cbb)
