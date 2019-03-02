@@ -21,7 +21,7 @@ struct PitchClassLabel {
 constexpr bool operator==(const PitchClassLabel& left, const PitchClassLabel& right) noexcept;
 constexpr bool operator!=(const PitchClassLabel& left, const PitchClassLabel& right) noexcept;
 
-constexpr int toPitchClass(PitchClassLabel label) noexcept;
+constexpr int toPitchClass(const PitchClassLabel& label) noexcept;
 
 
 // ================================ Template and inline definitions ================================
@@ -43,7 +43,7 @@ constexpr bool operator!=(const PitchClassLabel& left, const PitchClassLabel& ri
     return !(left == right);
 }
 
-constexpr int toPitchClass(const PitchClassLabel label) noexcept
+constexpr int toPitchClass(const PitchClassLabel& label) noexcept
 {
     const auto remainder = (label.letter + label.accidental) % 12;
 
