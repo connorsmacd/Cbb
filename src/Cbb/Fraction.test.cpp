@@ -342,6 +342,13 @@ TEST_CASE("Fractions can be divided", "[Fraction]")
     REQUIRE(Fraction(2, 3) / Fraction(3, 11) == Fraction(22, 9));
 }
 
+TEST_CASE("The remainder of two fractions can be calculated", "[Fraction]")
+{
+    REQUIRE(Fraction(19, 21) % Fraction(4, 21) == Fraction(3, 21));
+    REQUIRE(Fraction(4, 7) % Fraction(2, 5) == Fraction(6, 35));
+    REQUIRE(Fraction(-2, 5) % Fraction(2, 3) == Fraction(-6, 15));
+}
+
 TEST_CASE("A fraction can be serialized", "[Fraction]")
 {
     const auto f = Fraction(-5, 7);

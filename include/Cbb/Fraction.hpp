@@ -39,6 +39,7 @@ constexpr Fraction operator+(const Fraction& augend, const Fraction& addend) noe
 constexpr Fraction operator-(const Fraction& minuend, const Fraction& subtrahend) noexcept;
 constexpr Fraction operator*(const Fraction& multiplicand, const Fraction& multiplier) noexcept;
 constexpr Fraction operator/(const Fraction& dividend, const Fraction& divisor) noexcept;
+constexpr Fraction operator%(const Fraction& dividend, const Fraction& divisor) noexcept;
 
 constexpr bool operator==(const Fraction& left, const Fraction& right) noexcept;
 constexpr bool operator!=(const Fraction& left, const Fraction& right) noexcept;
@@ -135,6 +136,15 @@ constexpr Fraction operator*(const Fraction& multiplicand, const Fraction& multi
 constexpr Fraction operator/(const Fraction& dividend, const Fraction& divisor) noexcept
 {
     return dividend * reciprocal(divisor);
+}
+
+constexpr Fraction operator%(const Fraction& dividend, const Fraction& divisor) noexcept
+{
+    if (dividend.den() == divisor.den())
+        return {dividend.num() % divisor.num(), dividend.den()};
+
+    return {(dividend.num() * divisor.den()) % (divisor.num() * dividend.den()),
+            dividend.den() * divisor.den()};
 }
 
 constexpr bool operator==(const Fraction& left, const Fraction& right) noexcept
