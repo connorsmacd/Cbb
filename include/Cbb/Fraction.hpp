@@ -261,6 +261,9 @@ constexpr bool isZero(const Fraction& fraction) noexcept
 
 constexpr bool isInteger(const Fraction& fraction) noexcept
 {
+    if (isUndefined(fraction))
+        return false;
+
     return 0 == fraction.num() % fraction.den();
 }
 
