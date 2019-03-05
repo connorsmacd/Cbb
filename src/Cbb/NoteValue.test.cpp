@@ -143,7 +143,7 @@ TEST_CASE(
     REQUIRE_FALSE(NoteValue(wholeNote, triplet) > NoteValue(wholeNote, triplet));
 }
 
-TEST_CASE("Note values with identical symbols are symbolically equal", "[Fraction]")
+TEST_CASE("Note values with identical symbols are symbolically equal", "[NoteValue]")
 {
     REQUIRE(symbolicallyEqual(NoteValue(quarterNote, quintuplet, 3),
                               NoteValue(quarterNote, quintuplet, 3)));
@@ -152,9 +152,40 @@ TEST_CASE("Note values with identical symbols are symbolically equal", "[Fractio
 }
 
 TEST_CASE("Note values with equivalent relative value but different symbols are not equal",
-          "[Fraction]")
+          "[NoteValue]")
 {
     REQUIRE(symbolicallyEqual(NoteValue(halfNote, decuplet, 3), NoteValue(halfNote, decuplet, 3)));
     REQUIRE_FALSE(notSymbolicallyEqual(NoteValue(quarterNote, quintuplet, 3),
                                        NoteValue(quarterNote, quintuplet, 3)));
+}
+
+TEST_CASE("A note value with a defined base, tuplet, and dot count is defined", "[NoteValue]")
+{
+    REQUIRE(isDefined(NoteValue(twoHundredFiftySixthNote, decuplet, 14)));
+    REQUIRE_FALSE(isUndefined(NoteValue(twoHundredFiftySixthNote, decuplet, 14)));
+    REQUIRE(isDefined(NoteValue(twoHundredFiftySixthNote, Tuplet(113), 14)));
+    REQUIRE_FALSE(isUndefined(NoteValue(twoHundredFiftySixthNote, Tuplet(113), 14)));
+}
+
+TEST_CASE("A note value with an undefined base is undefined", "[NoteValue]")
+{
+    REQUIRE_FALSE(isDefined(NoteValue(undefinedNoteValueBase, septuplet, 2)));
+    REQUIRE(isUndefined(NoteValue(undefinedNoteValueBase, septuplet, 2)));
+    REQUIRE_FALSE(isDefined(NoteValue(NoteValueBase(-58), septuplet, 2)));
+    REQUIRE(isUndefined(NoteValue(NoteValueBase(-58), septuplet, 2)));
+}
+
+TEST_CASE("A note value with an undefined tuplet is undefined", "[NoteValue]")
+{
+    REQUIRE_FALSE(isDefined(NoteValue(longa, undefinedTuplet, 2)));
+    REQUIRE(isUndefined(NoteValue(longa, undefinedTuplet, 2)));
+    REQUIRE_FALSE(isDefined(NoteValue(longa, Tuplet(-44), 2)));
+    REQUIRE(isUndefined(NoteValue(longa, Tuplet(-44), 2)));
+}
+
+TEST_CASE("A note value with a dot count that exceeds the maximum is undefined", "[NoteValue]")
+{
+    REQUIRE_FALSE(
+        isDefined(NoteValue(twoHundredFiftySixthNote, decuplet, NoteValue::maxNumDots + 1)));
+    REQUIRE(isUndefined(NoteValue(twoHundredFiftySixthNote, decuplet, NoteValue::maxNumDots + 1)));
 }
