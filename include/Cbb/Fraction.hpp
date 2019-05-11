@@ -74,8 +74,8 @@ constexpr bool isUndefined(const Fraction& fraction) noexcept;
 
 
 constexpr Fraction::Fraction(const long long numerator, const long long denominator) noexcept :
-    n{numerator},
-    d{denominator}
+    n {numerator},
+    d {denominator}
 {
 }
 

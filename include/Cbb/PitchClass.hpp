@@ -28,8 +28,8 @@ constexpr int toPitchClass(const PitchClassLabel& label) noexcept;
 
 
 constexpr PitchClassLabel::PitchClassLabel(const Letter l, const Accidental a) :
-    letter{l},
-    accidental{a}
+    letter {l},
+    accidental {a}
 {
 }
 

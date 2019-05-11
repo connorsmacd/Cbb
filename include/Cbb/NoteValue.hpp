@@ -2,8 +2,10 @@
 
 #include <Cbb/Fraction.hpp>
 
+#include <climits>
 #include <cmath>
 #include <stdexcept>
+#include <vector>
 
 
 namespace Cbb {
@@ -55,26 +57,26 @@ class NoteValue final {
 public:
     using Base = NoteValueBase;
 
-    static constexpr unsigned int maxNumDots = sizeof(long long) * 8 - 1;
+    static constexpr std::size_t maxNumDots = sizeof(long long) * CHAR_BIT - 1;
 
-    constexpr NoteValue() = default;
-    constexpr NoteValue(Base base, Tuplet tuplet = duplet, unsigned int numDots = 0) noexcept;
-    constexpr NoteValue(Base base, unsigned int numDots) noexcept;
+    constexpr NoteValue() noexcept = default;
+    constexpr NoteValue(Base base, Tuplet tuplet = duplet, std::size_t numDots = 0) noexcept;
+    constexpr NoteValue(Base base, std::size_t numDots) noexcept;
 
     constexpr Base getBase() const noexcept { return b; }
     constexpr Tuplet getTuplet() const noexcept { return t; }
-    constexpr unsigned int getNumDots() const noexcept { return d; }
+    constexpr std::size_t getNumDots() const noexcept { return d; }
+
+    constexpr Fraction relativeValue() const noexcept;
 
     friend constexpr bool symbolicallyEqual(const NoteValue& left, const NoteValue& right) noexcept;
     friend constexpr bool notSymbolicallyEqual(const NoteValue& left,
                                                const NoteValue& right) noexcept;
 
-    friend constexpr Fraction relativeValue(const NoteValue& base) noexcept;
-
 private:
     Base b = wholeNote;
     Tuplet t = duplet;
-    unsigned int d = 0;
+    std::size_t d = 0;
 };
 
 // These compare based on relative value. It is possible for note values to have equivalent
@@ -89,7 +91,8 @@ constexpr bool operator>=(const NoteValue& left, const NoteValue& right) noexcep
 
 constexpr Fraction relativeValue(NoteValueBase base) noexcept;
 constexpr Fraction calculateTupletAugmentation(Tuplet tuplet) noexcept;
-constexpr Fraction calculateDotAugmentation(unsigned int numDots) noexcept;
+constexpr Fraction calculateDotAugmentation(std::size_t numDots) noexcept;
+constexpr Fraction relativeValue(const NoteValue& noteValue) noexcept;
 
 constexpr bool isDefined(const NoteValue& value) noexcept;
 constexpr bool isUndefined(const NoteValue& value) noexcept;
@@ -100,16 +103,21 @@ constexpr bool isUndefined(const NoteValue& value) noexcept;
 
 constexpr NoteValue::NoteValue(const Base base,
                                const Tuplet tuplet,
-                               const unsigned int numDots) noexcept :
-    b{base},
-    t{tuplet},
-    d{numDots}
+                               const std::size_t numDots) noexcept :
+    b {base},
+    t {tuplet},
+    d {numDots}
 {
 }
 
-constexpr NoteValue::NoteValue(const Base base, const unsigned int numDots) noexcept :
-    NoteValue{base, duplet, numDots}
+constexpr NoteValue::NoteValue(const Base base, const std::size_t numDots) noexcept :
+    NoteValue {base, duplet, numDots}
 {
+}
+
+constexpr Fraction NoteValue::relativeValue() const noexcept
+{
+    return ::Cbb::relativeValue(b) * calculateTupletAugmentation(t) * calculateDotAugmentation(d);
 }
 
 constexpr bool operator==(const NoteValue& left, const NoteValue& right) noexcept
@@ -195,7 +203,7 @@ constexpr Fraction calculateTupletAugmentation(const Tuplet tuplet) noexcept
     return {2, tuplet};
 }
 
-constexpr Fraction calculateDotAugmentation(const unsigned int numDots) noexcept
+constexpr Fraction calculateDotAugmentation(const std::size_t numDots) noexcept
 {
     if (numDots > NoteValue::maxNumDots)
         return {0, 0};
@@ -207,8 +215,7 @@ constexpr Fraction calculateDotAugmentation(const unsigned int numDots) noexcept
 
 constexpr Fraction relativeValue(const NoteValue& noteValue) noexcept
 {
-    return relativeValue(noteValue.b) * calculateTupletAugmentation(noteValue.t)
-           * calculateDotAugmentation(noteValue.d);
+    return noteValue.relativeValue();
 }
 
 constexpr bool isDefined(const NoteValue& value) noexcept

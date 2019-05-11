@@ -1,13 +1,11 @@
 #include <Cbb/Pitch.hpp>
 
-#include <Cbb/Midi.hpp>
-
 
 namespace Cbb {
 
 
 Pitch::Pitch(const float frequencyHz, const Tuning tuning) noexcept :
-    Pitch{Midi::frequencyHzToNoteNumber(frequencyHz, tuning)}
+    Pitch {Midi::frequencyHzToNoteNumber(frequencyHz, tuning)}
 {
 }
 
