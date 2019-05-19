@@ -199,12 +199,12 @@ TEST_CASE("An equivalent fraction with minimal negative signs can be created", "
 
 TEST_CASE("A fraction's reciprocal can be calculated", "[Fraction]")
 {
-    REQUIRE(reciprocal(Fraction(4, 19)) == Fraction(19, 4));
+    REQUIRE(reciprocalOf(Fraction(4, 19)) == Fraction(19, 4));
 }
 
 TEST_CASE("A fraction can be converted to a decimal", "[Fraction]")
 {
-    REQUIRE(decimal(Fraction(4, 5)) == 0.8L);
+    REQUIRE(toDecimal(Fraction(4, 5)) == 0.8L);
 }
 
 TEST_CASE("A fraction can be promoted", "[Fraction]")

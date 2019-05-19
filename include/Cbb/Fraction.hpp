@@ -41,6 +41,12 @@ constexpr Fraction operator*(const Fraction& multiplicand, const Fraction& multi
 constexpr Fraction operator/(const Fraction& dividend, const Fraction& divisor) noexcept;
 constexpr Fraction operator%(const Fraction& dividend, const Fraction& divisor) noexcept;
 
+constexpr Fraction& operator+=(Fraction& augend, const Fraction& addend) noexcept;
+constexpr Fraction& operator-=(Fraction& minuend, const Fraction& subtrahend) noexcept;
+constexpr Fraction& operator*=(Fraction& multiplicand, const Fraction& multiplier) noexcept;
+constexpr Fraction& operator/=(Fraction& dividend, const Fraction& divisor) noexcept;
+constexpr Fraction& operator%=(Fraction& dividend, const Fraction& divisor) noexcept;
+
 constexpr bool operator==(const Fraction& left, const Fraction& right) noexcept;
 constexpr bool operator!=(const Fraction& left, const Fraction& right) noexcept;
 constexpr bool operator<(const Fraction& left, const Fraction& right) noexcept;
@@ -57,10 +63,10 @@ constexpr long long numerator(const Fraction& fraction) noexcept;
 constexpr long long denominator(const Fraction& fraction) noexcept;
 
 constexpr Fraction reduce(const Fraction& fraction) noexcept;
-constexpr Fraction reciprocal(const Fraction& fraction) noexcept;
-constexpr long double decimal(const Fraction& fraction) noexcept;
+constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept;
+constexpr long double toDecimal(const Fraction& fraction) noexcept;
 
-constexpr unsigned int numNegativeSigns(const Fraction& fraction) noexcept;
+constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept;
 
 constexpr bool isPositive(const Fraction& fraction) noexcept;
 constexpr bool isNegative(const Fraction& fraction) noexcept;
@@ -135,7 +141,7 @@ constexpr Fraction operator*(const Fraction& multiplicand, const Fraction& multi
 
 constexpr Fraction operator/(const Fraction& dividend, const Fraction& divisor) noexcept
 {
-    return dividend * reciprocal(divisor);
+    return dividend * reciprocalOf(divisor);
 }
 
 constexpr Fraction operator%(const Fraction& dividend, const Fraction& divisor) noexcept
@@ -145,6 +151,31 @@ constexpr Fraction operator%(const Fraction& dividend, const Fraction& divisor) 
 
     return {(dividend.num() * divisor.den()) % (divisor.num() * dividend.den()),
             dividend.den() * divisor.den()};
+}
+
+constexpr Fraction& operator+=(Fraction& augend, const Fraction& addend) noexcept
+{
+    return augend = augend + addend;
+}
+
+constexpr Fraction& operator-=(Fraction& minuend, const Fraction& subtrahend) noexcept
+{
+    return minuend = minuend - subtrahend;
+}
+
+constexpr Fraction& operator*=(Fraction& multiplicand, const Fraction& multiplier) noexcept
+{
+    return multiplicand = multiplicand * multiplier;
+}
+
+constexpr Fraction& operator/=(Fraction& dividend, const Fraction& divisor) noexcept
+{
+    return dividend = dividend / divisor;
+}
+
+constexpr Fraction& operator%=(Fraction& dividend, const Fraction& divisor) noexcept
+{
+    return dividend = dividend % divisor;
 }
 
 constexpr bool operator==(const Fraction& left, const Fraction& right) noexcept
@@ -229,17 +260,17 @@ constexpr Fraction reduce(const Fraction& fraction) noexcept
     return Fraction(fraction.num() / gcd, fraction.den() / gcd).withMinimalNegativeSigns();
 }
 
-constexpr Fraction reciprocal(const Fraction& fraction) noexcept
+constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept
 {
     return {fraction.den(), fraction.num()};
 }
 
-constexpr long double decimal(const Fraction& fraction) noexcept
+constexpr long double toDecimal(const Fraction& fraction) noexcept
 {
     return static_cast<long double>(fraction.num()) / static_cast<long double>(fraction.den());
 }
 
-constexpr unsigned int numNegativeSigns(const Fraction& fraction) noexcept
+constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept
 {
     return ((fraction.num() < 0) ? 1 : 0) + ((fraction.den() < 0) ? 1 : 0);
 }
