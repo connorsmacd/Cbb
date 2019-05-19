@@ -24,7 +24,7 @@ constexpr bool operator!=(const PitchClassLabel& left, const PitchClassLabel& ri
 constexpr int toPitchClass(const PitchClassLabel& label) noexcept;
 
 
-// ================================ Template and inline definitions ================================
+// =================================================================================================
 
 
 constexpr PitchClassLabel::PitchClassLabel(const Letter l, const Accidental a) :
