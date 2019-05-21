@@ -207,6 +207,13 @@ TEST_CASE("A fraction can be converted to a decimal", "[Fraction]")
     REQUIRE(toDecimal(Fraction(4, 5)) == 0.8L);
 }
 
+TEST_CASE("A fractional power of two can be computed", "[Fraction]")
+{
+    REQUIRE(fractionPow2(7) == 128);
+    REQUIRE(fractionPow2(0) == 1);
+    REQUIRE(fractionPow2(-3) == Fraction(1, 8));
+}
+
 TEST_CASE("A fraction can be promoted", "[Fraction]")
 {
     REQUIRE(+Fraction(7, 10) == Fraction(7, 10));

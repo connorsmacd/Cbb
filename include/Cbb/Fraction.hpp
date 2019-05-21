@@ -63,8 +63,12 @@ constexpr long long numerator(const Fraction& fraction) noexcept;
 constexpr long long denominator(const Fraction& fraction) noexcept;
 
 constexpr Fraction reduce(const Fraction& fraction) noexcept;
+
 constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept;
+
 constexpr long double toDecimal(const Fraction& fraction) noexcept;
+
+constexpr Fraction fractionPow2(int exponent) noexcept;
 
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept;
 
@@ -268,6 +272,12 @@ constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept
 constexpr long double toDecimal(const Fraction& fraction) noexcept
 {
     return static_cast<long double>(fraction.num()) / static_cast<long double>(fraction.den());
+}
+
+constexpr Fraction fractionPow2(const int exponent) noexcept
+{
+    return (exponent >= 0) ? Fraction(static_cast<long long>(1ULL << exponent))
+                           : Fraction(1, static_cast<long long>(1ULL << -exponent));
 }
 
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept
