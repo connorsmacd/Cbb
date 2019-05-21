@@ -99,7 +99,7 @@ TEST_CASE("A pitch can be constructed from a MIDI note number", "[Pitch]")
 TEST_CASE("A pitch can be constructed from a frequency and tuning", "[Pitch]")
 {
     // 311.13 Hz if D#4 in A440
-    const auto p = Pitch(311.13f, A440);
+    const auto p = Pitch(311.13, A440);
 
     REQUIRE(p.getClass() == 3);
     REQUIRE(p.getOctave() == 4);
@@ -112,7 +112,7 @@ TEST_CASE("A pitch's MIDI note number can be retrieved", "[Pitch]")
 
 TEST_CASE("A pitch's frequency can be retrieved", "[Pitch]")
 {
-    REQUIRE(Pitch(261.63f, A440).getFrequencyHz() == Approx(261.63f).epsilon(0.01f));
+    REQUIRE(Pitch(261.63, A440).getFrequencyHz() == Approx(261.63).epsilon(0.01));
 }
 
 TEST_CASE("Identical pitches are equivalent", "[Pitch]")

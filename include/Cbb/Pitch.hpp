@@ -32,12 +32,12 @@ public:
     constexpr Pitch(Letter letter, Accidental accidental, int octave) noexcept;
     constexpr Pitch(const PitchLabel& label) noexcept;
     constexpr Pitch(Midi::NoteNumber number) noexcept;
-    Pitch(float frequencyHz, Tuning tuning = A440) noexcept;
+    Pitch(double frequencyHz, Tuning tuning = A440) noexcept;
 
     constexpr int getClass() const noexcept { return clas; }
     constexpr int getOctave() const noexcept { return oct; }
     constexpr Midi::NoteNumber getNoteNumber() const noexcept;
-    float getFrequencyHz(Tuning tuning = A440) const noexcept;
+    double getFrequencyHz(Tuning tuning = A440) const noexcept;
 
     friend constexpr bool operator==(const Pitch& left, const Pitch& right) noexcept;
     friend constexpr bool operator!=(const Pitch& left, const Pitch& right) noexcept;

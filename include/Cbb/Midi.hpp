@@ -213,8 +213,8 @@ enum NoteNumber {
     B9,
 };
 
-NoteNumber frequencyHzToNoteNumber(float frequencyHz, Tuning tuning = A440) noexcept;
-float noteNumberToFrequencyHz(NoteNumber number, Tuning tuning = A440) noexcept;
+NoteNumber frequencyHzToNoteNumber(double frequencyHz, Tuning tuning = A440) noexcept;
+double noteNumberToFrequencyHz(NoteNumber number, Tuning tuning = A440) noexcept;
 
 
 }; // namespace Midi

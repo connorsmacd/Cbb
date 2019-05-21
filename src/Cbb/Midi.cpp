@@ -7,15 +7,15 @@ namespace Cbb {
 namespace Midi {
 
 
-NoteNumber frequencyHzToNoteNumber(const float frequencyHz, const Tuning tuning) noexcept
+NoteNumber frequencyHzToNoteNumber(const double frequencyHz, const Tuning tuning) noexcept
 {
     return NoteNumber(A4
-                      + int(std::roundf(12.0f * std::log2(frequencyHz / tuning.frequencyOfA4Hz))));
+                      + int(std::roundf(12.0 * std::log2(frequencyHz / tuning.frequencyOfA4Hz))));
 }
 
-float noteNumberToFrequencyHz(const NoteNumber number, const Tuning tuning) noexcept
+double noteNumberToFrequencyHz(const NoteNumber number, const Tuning tuning) noexcept
 {
-    return std::pow(2.0f, float(number - A4) / 12.0f) * tuning.frequencyOfA4Hz;
+    return std::pow(2.0, double(number - A4) / 12.0) * tuning.frequencyOfA4Hz;
 }
 
 

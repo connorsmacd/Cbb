@@ -5,11 +5,11 @@ namespace Cbb {
 
 
 struct Tuning {
-    float frequencyOfA4Hz;
+    double frequencyOfA4Hz;
 };
 
-static const Tuning A440 {440.0f};
-static const Tuning A432 {432.0f};
+static const Tuning A440 {440.0};
+static const Tuning A432 {432.0};
 
 
 }; // namespace Cbb
