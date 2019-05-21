@@ -4,7 +4,6 @@
 
 #include <climits>
 #include <cmath>
-#include <stdexcept>
 #include <vector>
 
 
@@ -15,12 +14,12 @@ class BasicNoteValue final {
 
 public:
     constexpr BasicNoteValue() noexcept = default;
-    constexpr BasicNoteValue(long long initBaseTwoExponent) noexcept;
+    constexpr BasicNoteValue(int initBaseTwoExponent) noexcept;
 
     constexpr Fraction relativeValue() const noexcept;
 
 private:
-    long long baseTwoExponent = {};
+    int baseTwoExponent = {};
 };
 
 constexpr Fraction relativeValue(const BasicNoteValue& value) noexcept;
@@ -87,15 +86,14 @@ constexpr bool operator>=(const NoteValue& left, const NoteValue& right) noexcep
 // =================================================================================================
 
 
-constexpr BasicNoteValue::BasicNoteValue(const long long initBaseTwoExponent) noexcept :
+constexpr BasicNoteValue::BasicNoteValue(const int initBaseTwoExponent) noexcept :
     baseTwoExponent {initBaseTwoExponent}
 {
 }
 
 constexpr Fraction BasicNoteValue::relativeValue() const noexcept
 {
-    return (baseTwoExponent >= 0) ? Fraction(static_cast<long long>(1ULL << baseTwoExponent))
-                                  : Fraction(1, static_cast<long long>(1ULL << -baseTwoExponent));
+    return fractionPow2(baseTwoExponent);
 }
 
 constexpr Fraction relativeValue(const BasicNoteValue& value) noexcept
@@ -146,9 +144,7 @@ constexpr Fraction calculateDotAugmentation(const std::size_t numDots) noexcept
     if (numDots > NoteValue::maxNumDots)
         return {0, 0};
 
-    const auto twoToThePowerOfNumDots = static_cast<long long>(1ULL << numDots);
-
-    return 2 - Fraction(1, twoToThePowerOfNumDots);
+    return 2 - fractionPow2(-static_cast<int>(numDots));
 }
 
 constexpr NoteValue::NoteValue(const BasicNoteValue& initBase,
