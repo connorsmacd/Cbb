@@ -1,11 +1,29 @@
 #pragma once
 
 #include <Cbb/Midi.hpp>
-#include <Cbb/PitchClass.hpp>
 #include <Cbb/Tuning.hpp>
 
 
 namespace Cbb {
+
+
+enum Letter { C = 0, D = 2, E = 4, F = 5, G = 7, A = 9, B = 11 };
+
+enum Accidental { doubleFlat = -2, flat, natural, sharp, doubleSharp };
+
+
+struct PitchClassLabel final {
+    Letter letter = C;
+    Accidental accidental = natural;
+
+    constexpr PitchClassLabel() = default;
+    constexpr PitchClassLabel(Letter initLetter, Accidental initAccidental = natural);
+};
+
+constexpr bool operator==(const PitchClassLabel& left, const PitchClassLabel& right) noexcept;
+constexpr bool operator!=(const PitchClassLabel& left, const PitchClassLabel& right) noexcept;
+
+constexpr int toPitchClass(const PitchClassLabel& label) noexcept;
 
 
 struct PitchLabel final {
@@ -14,9 +32,9 @@ struct PitchLabel final {
     int octave = {};
 
     constexpr PitchLabel() = default;
-    constexpr PitchLabel(Letter l, Accidental a, int o) noexcept;
-    constexpr PitchLabel(Letter l, int o) noexcept;
-    constexpr PitchLabel(const PitchClassLabel& label, int o) noexcept;
+    constexpr PitchLabel(Letter initLetter, Accidental initAccidental, int initOctave) noexcept;
+    constexpr PitchLabel(Letter initLetter, int initOctave) noexcept;
+    constexpr PitchLabel(const PitchClassLabel& label, int initOctave) noexcept;
 
     constexpr operator PitchClassLabel() const noexcept { return {letter, accidental}; }
 };
@@ -24,18 +42,19 @@ struct PitchLabel final {
 constexpr bool operator==(const PitchLabel& left, const PitchLabel& right) noexcept;
 constexpr bool operator!=(const PitchLabel& left, const PitchLabel& right) noexcept;
 
+
 class Pitch final {
 
 public:
     constexpr Pitch() = default;
-    constexpr Pitch(int pitchClass, int octave) noexcept;
+    constexpr Pitch(int cLass, int octave) noexcept;
     constexpr Pitch(Letter letter, Accidental accidental, int octave) noexcept;
     constexpr Pitch(const PitchLabel& label) noexcept;
     constexpr Pitch(Midi::NoteNumber number) noexcept;
     Pitch(double frequencyHz, Tuning tuning = A440) noexcept;
 
-    constexpr int getClass() const noexcept { return clas; }
-    constexpr int getOctave() const noexcept { return oct; }
+    constexpr int getClass() const noexcept { return class_; }
+    constexpr int getOctave() const noexcept { return octave_; }
     constexpr Midi::NoteNumber getNoteNumber() const noexcept;
     double getFrequencyHz(Tuning tuning = A440) const noexcept;
 
@@ -47,26 +66,53 @@ public:
     friend constexpr bool operator>=(const Pitch& left, const Pitch& right) noexcept;
 
 private:
-    int clas = {}, oct = {};
+    int class_ = {}, octave_ = {};
 };
 
 
-// ================================ Template and inline definitions ================================
+// =================================================================================================
 
 
-constexpr PitchLabel::PitchLabel(const Letter l, const Accidental a, const int o) noexcept :
-    letter {l},
-    accidental {a},
-    octave {o}
+constexpr PitchClassLabel::PitchClassLabel(const Letter initLetter,
+                                           const Accidental initAccidental) :
+    letter {initLetter},
+    accidental {initAccidental}
 {
 }
 
-constexpr PitchLabel::PitchLabel(const Letter l, const int o) noexcept : PitchLabel {l, natural, o}
+constexpr bool operator==(const PitchClassLabel& left, const PitchClassLabel& right) noexcept
+{
+    return left.letter == right.letter && left.accidental == right.accidental;
+}
+
+constexpr bool operator!=(const PitchClassLabel& left, const PitchClassLabel& right) noexcept
+{
+    return !(left == right);
+}
+
+constexpr int toPitchClass(const PitchClassLabel& label) noexcept
+{
+    const auto remainder = (label.letter + label.accidental) % 12;
+
+    return (remainder >= 0) ? remainder : remainder + 12;
+}
+
+constexpr PitchLabel::PitchLabel(const Letter initLetter,
+                                 const Accidental initAccidental,
+                                 const int initOctave) noexcept :
+    letter {initLetter},
+    accidental {initAccidental},
+    octave {initOctave}
 {
 }
 
-constexpr PitchLabel::PitchLabel(const PitchClassLabel& label, int o) noexcept :
-    PitchLabel {label.letter, label.accidental, o}
+constexpr PitchLabel::PitchLabel(const Letter initLetter, const int initOctave) noexcept :
+    PitchLabel {initLetter, natural, initOctave}
+{
+}
+
+constexpr PitchLabel::PitchLabel(const PitchClassLabel& label, int initOctave) noexcept :
+    PitchLabel {label.letter, label.accidental, initOctave}
 {
 }
 
@@ -81,9 +127,9 @@ constexpr bool operator!=(const PitchLabel& left, const PitchLabel& right) noexc
     return !(left == right);
 }
 
-constexpr Pitch::Pitch(const int pitchClass, const int octave) noexcept :
-    clas {pitchClass},
-    oct {octave}
+constexpr Pitch::Pitch(const int cLass, const int octave) noexcept :
+    class_ {cLass},
+    octave_ {octave}
 {
 }
 
@@ -100,19 +146,19 @@ constexpr Pitch::Pitch(const PitchLabel& label) noexcept :
 }
 
 constexpr Pitch::Pitch(const Midi::NoteNumber number) noexcept :
-    clas {number % 12},
-    oct {number / 12 - 1}
+    class_ {number % 12},
+    octave_ {number / 12 - 1}
 {
 }
 
 constexpr Midi::NoteNumber Pitch::getNoteNumber() const noexcept
 {
-    return Midi::NoteNumber(clas + (oct + 1) * 12);
+    return Midi::NoteNumber(class_ + (octave_ + 1) * 12);
 }
 
 constexpr bool operator==(const Pitch& left, const Pitch& right) noexcept
 {
-    return left.clas == right.clas && left.oct == right.oct;
+    return left.class_ == right.class_ && left.octave_ == right.octave_;
 }
 
 constexpr bool operator!=(const Pitch& left, const Pitch& right) noexcept
@@ -122,7 +168,8 @@ constexpr bool operator!=(const Pitch& left, const Pitch& right) noexcept
 
 constexpr bool operator<(const Pitch& left, const Pitch& right) noexcept
 {
-    return (left.oct != right.oct) ? left.oct < right.oct : left.clas < right.clas;
+    return (left.octave_ != right.octave_) ? left.octave_ < right.octave_
+                                           : left.class_ < right.class_;
 }
 
 constexpr bool operator<=(const Pitch& left, const Pitch& right) noexcept
