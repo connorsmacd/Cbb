@@ -375,3 +375,17 @@ TEST_CASE("A fraction can be deserialized", "[Fraction]")
 
     REQUIRE(f == Fraction(-5, 7));
 }
+
+TEST_CASE("A unit fraction can be default constructed to 0/1", "[Fraction]")
+{
+    constexpr auto f = UnitFraction();
+
+    REQUIRE(symbolicallyEqual(f, Fraction()));
+}
+
+TEST_CASE("A unit fraction can be constructed from a denomintor", "[Fraction]")
+{
+    constexpr auto f = UnitFraction(3);
+
+    REQUIRE(f == Fraction(1, 3));
+}

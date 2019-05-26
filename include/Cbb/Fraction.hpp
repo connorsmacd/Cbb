@@ -80,6 +80,20 @@ constexpr bool isDefined(const Fraction& fraction) noexcept;
 constexpr bool isUndefined(const Fraction& fraction) noexcept;
 
 
+class UnitFraction final {
+
+public:
+    constexpr UnitFraction() noexcept = default;
+    constexpr UnitFraction(long long denominator) noexcept;
+
+    constexpr operator const Fraction&() const noexcept { return fraction_; }
+    constexpr const Fraction& toFraction() const noexcept { return fraction_; }
+
+private:
+    Fraction fraction_;
+};
+
+
 // ================================ Template and inline definitions ================================
 
 
@@ -316,6 +330,11 @@ constexpr bool isDefined(const Fraction& fraction) noexcept
 constexpr bool isUndefined(const Fraction& fraction) noexcept
 {
     return !isDefined(fraction);
+}
+
+constexpr UnitFraction::UnitFraction(const long long denominator) noexcept :
+    fraction_ {1, denominator}
+{
 }
 
 
