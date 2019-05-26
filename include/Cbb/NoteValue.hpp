@@ -14,12 +14,12 @@ class BasicNoteValue final {
 
 public:
     constexpr BasicNoteValue() noexcept = default;
-    constexpr BasicNoteValue(int initBaseTwoExponent) noexcept;
+    constexpr BasicNoteValue(int baseTwoExponent) noexcept;
 
     constexpr Fraction relativeValue() const noexcept;
 
 private:
-    int baseTwoExponent = {};
+    int baseTwoExponent_ = {};
 };
 
 constexpr Fraction relativeValue(const BasicNoteValue& value) noexcept;
@@ -56,21 +56,21 @@ public:
     static constexpr std::size_t maxNumDots = sizeof(long long) * CHAR_BIT - 1;
 
     constexpr NoteValue() noexcept = default;
-    constexpr NoteValue(const BasicNoteValue& initBase,
-                        Tuplet initTuplet = duplet,
-                        std::size_t initNumDots = 0) noexcept;
-    constexpr NoteValue(const BasicNoteValue& initBase, std::size_t initNumDots) noexcept;
+    constexpr NoteValue(const BasicNoteValue& base,
+                        Tuplet tuplet = duplet,
+                        std::size_t numDots = 0) noexcept;
+    constexpr NoteValue(const BasicNoteValue& base, std::size_t numDots) noexcept;
 
-    constexpr const BasicNoteValue& getBase() const noexcept { return base; }
-    constexpr Tuplet getTuplet() const noexcept { return tuplet; }
-    constexpr std::size_t getNumDots() const noexcept { return numDots; }
+    constexpr const BasicNoteValue& getBase() const noexcept { return base_; }
+    constexpr Tuplet getTuplet() const noexcept { return tuplet_; }
+    constexpr std::size_t getNumDots() const noexcept { return numDots_; }
 
     constexpr Fraction relativeValue() const noexcept;
 
 private:
-    BasicNoteValue base = {};
-    Tuplet tuplet = duplet;
-    std::size_t numDots = {};
+    BasicNoteValue base_;
+    Tuplet tuplet_ = duplet;
+    std::size_t numDots_ = {};
 };
 
 constexpr Fraction relativeValue(const NoteValue& noteValue) noexcept;
@@ -86,14 +86,14 @@ constexpr bool operator>=(const NoteValue& left, const NoteValue& right) noexcep
 // =================================================================================================
 
 
-constexpr BasicNoteValue::BasicNoteValue(const int initBaseTwoExponent) noexcept :
-    baseTwoExponent {initBaseTwoExponent}
+constexpr BasicNoteValue::BasicNoteValue(const int baseTwoExponent) noexcept :
+    baseTwoExponent_ {baseTwoExponent}
 {
 }
 
 constexpr Fraction BasicNoteValue::relativeValue() const noexcept
 {
-    return fractionPow2(baseTwoExponent);
+    return fractionPow2(baseTwoExponent_);
 }
 
 constexpr Fraction relativeValue(const BasicNoteValue& value) noexcept
@@ -147,25 +147,24 @@ constexpr Fraction calculateDotAugmentation(const std::size_t numDots) noexcept
     return 2 - fractionPow2(-static_cast<int>(numDots));
 }
 
-constexpr NoteValue::NoteValue(const BasicNoteValue& initBase,
-                               const Tuplet initTuplet,
-                               const std::size_t initNumDots) noexcept :
-    base {initBase},
-    tuplet {initTuplet},
-    numDots {initNumDots}
+constexpr NoteValue::NoteValue(const BasicNoteValue& base,
+                               const Tuplet tuplet,
+                               const std::size_t numDots) noexcept :
+    base_ {base},
+    tuplet_ {tuplet},
+    numDots_ {numDots}
 {
 }
 
-constexpr NoteValue::NoteValue(const BasicNoteValue& initBase,
-                               const std::size_t initNumDots) noexcept :
-    NoteValue {initBase, duplet, initNumDots}
+constexpr NoteValue::NoteValue(const BasicNoteValue& base, const std::size_t numDots) noexcept :
+    NoteValue {base, duplet, numDots}
 {
 }
 
 constexpr Fraction NoteValue::relativeValue() const noexcept
 {
-    return base.relativeValue() * calculateTupletAugmentation(tuplet)
-           * calculateDotAugmentation(numDots);
+    return base_.relativeValue() * calculateTupletAugmentation(tuplet_)
+           * calculateDotAugmentation(numDots_);
 }
 
 constexpr Fraction relativeValue(const NoteValue& noteValue) noexcept
