@@ -18,6 +18,8 @@ public:
 
     constexpr Fraction relativeValue() const noexcept;
 
+    constexpr int getBaseTwoExponent() const noexcept { return baseTwoExponent_; }
+
 private:
     int baseTwoExponent_ = {};
 };
@@ -60,6 +62,7 @@ public:
                         Tuplet tuplet = duplet,
                         std::size_t numDots = 0) noexcept;
     constexpr NoteValue(const BasicNoteValue& base, std::size_t numDots) noexcept;
+    constexpr NoteValue(const UnitFraction& unitFraction) noexcept;
 
     constexpr const BasicNoteValue& getBase() const noexcept { return base_; }
     constexpr Tuplet getTuplet() const noexcept { return tuplet_; }
@@ -159,6 +162,25 @@ constexpr NoteValue::NoteValue(const BasicNoteValue& base,
 constexpr NoteValue::NoteValue(const BasicNoteValue& base, const std::size_t numDots) noexcept :
     NoteValue {base, duplet, numDots}
 {
+}
+
+constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
+{
+    const auto greatestDivisiblePow2Exponent = [=]() {
+        int result {1};
+
+        while (reciprocalOf(unitFraction) % fractionPow2(result + 1) == 0)
+            ++result;
+
+        return result;
+    }();
+
+    base_ = -greatestDivisiblePow2Exponent - 1;
+
+    const auto tupletValue
+        = reciprocalOf(unitFraction) / fractionPow2(greatestDivisiblePow2Exponent);
+
+    tuplet_ = static_cast<Tuplet>(numerator(reduce(tupletValue)));
 }
 
 constexpr Fraction NoteValue::relativeValue() const noexcept

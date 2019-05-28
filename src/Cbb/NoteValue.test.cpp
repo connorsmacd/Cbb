@@ -51,7 +51,7 @@ TEST_CASE("A note value can be constructed from just a base and dot count", "[No
     REQUIRE(n.getBase() == sixtyFourthNote);
     REQUIRE(n.getTuplet() == duplet);
     REQUIRE(n.getNumDots() == 2);
-}
+} 
 
 TEST_CASE("A note value can be constructed from just a base", "[NoteValue]")
 {
@@ -59,6 +59,15 @@ TEST_CASE("A note value can be constructed from just a base", "[NoteValue]")
 
     REQUIRE(n.getBase() == quarterNote);
     REQUIRE(n.getTuplet() == duplet);
+    REQUIRE(n.getNumDots() == 0);
+}
+
+TEST_CASE("A note value can be constructed from a unit fraction", "[NoteValue]")
+{
+    constexpr auto n = NoteValue(UnitFraction(36));
+
+    REQUIRE(n.getBase() == eighthNote);
+    REQUIRE(n.getTuplet() == nonuplet);
     REQUIRE(n.getNumDots() == 0);
 }
 
