@@ -51,7 +51,7 @@ TEST_CASE("A note value can be constructed from just a base and dot count", "[No
     REQUIRE(n.getBase() == sixtyFourthNote);
     REQUIRE(n.getTuplet() == duplet);
     REQUIRE(n.getNumDots() == 2);
-} 
+}
 
 TEST_CASE("A note value can be constructed from just a base", "[NoteValue]")
 {
@@ -143,11 +143,23 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "Note value is neither less than nor greater than a note value with the same relative value",
+    "A note value is neither less than nor greater than a note value with the same relative value",
     "[NoteValue]")
 {
     REQUIRE_FALSE(NoteValue(wholeNote, triplet) < NoteValue(wholeNote, triplet));
     REQUIRE(NoteValue(wholeNote, triplet) <= NoteValue(wholeNote, triplet));
     REQUIRE(NoteValue(wholeNote, triplet) >= NoteValue(wholeNote, triplet));
     REQUIRE_FALSE(NoteValue(wholeNote, triplet) > NoteValue(wholeNote, triplet));
+}
+
+TEST_CASE("Two note values can be divided to calculate a ratio", "[NoteValue]")
+{
+    REQUIRE(NoteValue(halfNote, triplet, 1) / NoteValue(wholeNote, quintuplet, 2)
+            == Fraction(5, 7));
+}
+
+TEST_CASE("Two note values can be reduced to calculate a remainder", "[NoteValue]")
+{
+    REQUIRE(NoteValue(eighthNote, septuplet, 2) % NoteValue(thirtySecondNote, 1)
+            == Fraction(1, 64));
 }

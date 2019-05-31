@@ -70,6 +70,11 @@ public:
 
     constexpr Fraction relativeValue() const noexcept;
 
+    friend constexpr Fraction operator/(const NoteValue& dividend,
+                                        const NoteValue& divisor) noexcept;
+    friend constexpr Fraction operator%(const NoteValue& dividend,
+                                        const NoteValue& divisor) noexcept;
+
 private:
     BasicNoteValue base_;
     Tuplet tuplet_ = duplet;
@@ -84,6 +89,9 @@ constexpr bool operator<(const NoteValue& left, const NoteValue& right) noexcept
 constexpr bool operator<=(const NoteValue& left, const NoteValue& right) noexcept;
 constexpr bool operator>(const NoteValue& left, const NoteValue& right) noexcept;
 constexpr bool operator>=(const NoteValue& left, const NoteValue& right) noexcept;
+
+constexpr Fraction operator/(const NoteValue& dividend, const NoteValue& divisor) noexcept;
+constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor) noexcept;
 
 
 // =================================================================================================
@@ -222,6 +230,16 @@ constexpr bool operator>(const NoteValue& left, const NoteValue& right) noexcept
 constexpr bool operator>=(const NoteValue& left, const NoteValue& right) noexcept
 {
     return !(left < right);
+}
+
+constexpr Fraction operator/(const NoteValue& dividend, const NoteValue& divisor) noexcept
+{
+    return relativeValue(dividend) / relativeValue(divisor);
+}
+
+constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor) noexcept
+{
+    return relativeValue(dividend) % relativeValue(divisor);
 }
 
 static constexpr BasicNoteValue octupleWholeNote = 3;
