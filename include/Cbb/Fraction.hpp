@@ -94,7 +94,7 @@ private:
 };
 
 
-// ================================ Template and inline definitions ================================
+// =================================================================================================
 
 
 constexpr Fraction::Fraction(const long long numerator, const long long denominator) noexcept :
