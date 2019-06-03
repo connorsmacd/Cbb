@@ -46,7 +46,7 @@ enum Tuplet {
     decuplet,
 };
 
-constexpr Fraction calculateTupletAugmentation(Tuplet tuplet) noexcept;
+constexpr Fraction calculateTupletFactor(Tuplet tuplet) noexcept;
 
 
 constexpr Fraction calculateDotAugmentation(std::size_t numDots) noexcept;
@@ -142,7 +142,7 @@ constexpr bool operator>=(const BasicNoteValue& left, const BasicNoteValue& righ
     return !(left > right);
 }
 
-constexpr Fraction calculateTupletAugmentation(const Tuplet tuplet) noexcept
+constexpr Fraction calculateTupletFactor(const Tuplet tuplet) noexcept
 {
     if (tuplet < 2)
         return {0, 0};
@@ -193,7 +193,7 @@ constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
 
 constexpr Fraction NoteValue::relativeValue() const noexcept
 {
-    return base_.relativeValue() * calculateTupletAugmentation(tuplet_)
+    return base_.relativeValue() * calculateTupletFactor(tuplet_)
            * calculateDotAugmentation(numDots_);
 }
 
