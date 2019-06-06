@@ -7,7 +7,7 @@
 using namespace Cbb;
 
 
-TEST_CASE("A note value can be default constructed to a regular whole note", "[NoteValue]")
+TEST_CASE("A default-constructed note value is a basic whole note", "[NoteValue]")
 {
     constexpr auto n = NoteValue();
 
@@ -16,7 +16,9 @@ TEST_CASE("A note value can be default constructed to a regular whole note", "[N
     REQUIRE(n.getNumDots() == 0);
 }
 
-TEST_CASE("A note value can be constructed with a base, tuplet, and dot count", "[NoteValue]")
+TEST_CASE(
+    "A note value constructed with a base, tuplet, and dot count produces the expected result",
+    "[NoteValue]")
 {
     constexpr auto n = NoteValue(semiquaver, quintuplet, 4);
 
@@ -25,7 +27,7 @@ TEST_CASE("A note value can be constructed with a base, tuplet, and dot count", 
     REQUIRE(n.getNumDots() == 4);
 }
 
-TEST_CASE("A note value can be constructed from another NoteValue", "[NoteValue]")
+TEST_CASE("A copy-constructed note value is a symbollicaly identical copy", "[NoteValue]")
 {
     constexpr auto n = NoteValue(quaver, nonuplet, 3);
     constexpr auto c = NoteValue(n);
@@ -35,7 +37,9 @@ TEST_CASE("A note value can be constructed from another NoteValue", "[NoteValue]
     REQUIRE(c.getNumDots() == 3);
 }
 
-TEST_CASE("A note value can be constructed from just a base and tuplet", "[NoteValue]")
+TEST_CASE("A note value constructed with just a base and a tuplet produces the expected base, "
+          "expected tuplet, and no dots",
+          "[NoteValue]")
 {
     constexpr auto n = NoteValue(halfNote, septuplet);
 
@@ -44,7 +48,9 @@ TEST_CASE("A note value can be constructed from just a base and tuplet", "[NoteV
     REQUIRE(n.getNumDots() == 0);
 }
 
-TEST_CASE("A note value can be constructed from just a base and dot count", "[NoteValue]")
+TEST_CASE("A note value constructed from just a base and dot count produces the expected base and "
+          "expected dot count, and is a duplet",
+          "[NoteValue]")
 {
     constexpr auto n = NoteValue(sixtyFourthNote, 2);
 
@@ -53,7 +59,8 @@ TEST_CASE("A note value can be constructed from just a base and dot count", "[No
     REQUIRE(n.getNumDots() == 2);
 }
 
-TEST_CASE("A note value can be constructed from just a base", "[NoteValue]")
+TEST_CASE("A note value constructed from just a base produces the expected basic note value",
+          "[NoteValue]")
 {
     constexpr auto n = NoteValue(quarterNote);
 
@@ -62,7 +69,9 @@ TEST_CASE("A note value can be constructed from just a base", "[NoteValue]")
     REQUIRE(n.getNumDots() == 0);
 }
 
-TEST_CASE("A note value can be constructed from a unit fraction", "[NoteValue]")
+TEST_CASE("A note value constructed from a unit fraction produces a note value with a relative "
+          "value equal to the unit fraction",
+          "[NoteValue]")
 {
     constexpr auto n = NoteValue(UnitFraction(36));
 
@@ -71,7 +80,7 @@ TEST_CASE("A note value can be constructed from a unit fraction", "[NoteValue]")
     REQUIRE(n.getNumDots() == 0);
 }
 
-TEST_CASE("A note value base has its expected relative value", "[NoteValue]")
+TEST_CASE("All the common basic note values have the correct relative value", "[NoteValue]")
 {
     REQUIRE(relativeValue(octupleWholeNote) == Fraction(8, 1));
     REQUIRE(relativeValue(quadrupleWholeNote) == Fraction(4, 1));
@@ -87,24 +96,24 @@ TEST_CASE("A note value base has its expected relative value", "[NoteValue]")
     REQUIRE(relativeValue(twoHundredFiftySixthNote) == Fraction(1, 256));
 }
 
-TEST_CASE("A note value with no augmentation factors (duplet and 0 dot count) has the same "
+TEST_CASE("A note value with no augmentation factors (duplet and no dots) has the same "
           "relative value as its base",
           "[NoteValue]")
 {
     REQUIRE(relativeValue(NoteValue(quarterNote)) == Fraction(1, 4));
 }
 
-TEST_CASE("A note value with a non-duplet tuplet is augmented appropriately", "[NoteValue]")
+TEST_CASE("A note value with a non-duplet tuplet is augemented as expected", "[NoteValue]")
 {
     REQUIRE(relativeValue(NoteValue(eighthNote, triplet)) == Fraction(1, 12));
 }
 
-TEST_CASE("A note value with a dot count is augemented appropriately", "[NoteValue]")
+TEST_CASE("A note value with a non-zero dot count is augmented as expected", "[NoteValue]")
 {
     REQUIRE(relativeValue(NoteValue(halfNote, 3)) == Fraction(15, 16));
 }
 
-TEST_CASE("A note value with both a non-duplet tuplet and dot count is augmented appropriately",
+TEST_CASE("A note value with both a non-duplet tuplet and dot count is augmented as expected",
           "[NoteValue]")
 {
     REQUIRE(relativeValue(NoteValue(sixteenthNote, quintuplet, 1)) == Fraction(3, 80));
@@ -152,13 +161,15 @@ TEST_CASE(
     REQUIRE_FALSE(NoteValue(wholeNote, triplet) > NoteValue(wholeNote, triplet));
 }
 
-TEST_CASE("Two note values can be divided to calculate a ratio", "[NoteValue]")
+TEST_CASE("Dividing one note value by another gives the ratio between them", "[NoteValue]")
 {
     REQUIRE(NoteValue(halfNote, triplet, 1) / NoteValue(wholeNote, quintuplet, 2)
             == Fraction(5, 7));
 }
 
-TEST_CASE("Two note values can be reduced to calculate a remainder", "[NoteValue]")
+TEST_CASE("Using the remainder operator on two note values gives the remainder of the division "
+          "between them",
+          "[NoteValue]")
 {
     REQUIRE(NoteValue(eighthNote, septuplet, 2) % NoteValue(thirtySecondNote, 1)
             == Fraction(1, 64));
