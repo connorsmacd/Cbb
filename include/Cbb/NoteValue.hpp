@@ -10,28 +10,35 @@
 namespace Cbb {
 
 
-class BasicNoteValue final {
-
-public:
-    constexpr BasicNoteValue() noexcept = default;
-    constexpr BasicNoteValue(int baseTwoExponent) noexcept;
-
-    constexpr Fraction relativeValue() const noexcept;
-
-    constexpr int getBaseTwoExponent() const noexcept { return baseTwoExponent_; }
-
-private:
-    int baseTwoExponent_ = {};
+// Each enumerator value is the base 2 log of its relative value
+enum NoteValueBase {
+    twoHundredFiftySixthNote = -8,
+    oneHundredTwentyEighthNote,
+    sixtyFourthNote,
+    thirtySecondNote,
+    sixteenthNote,
+    eighthNote,
+    quarterNote,
+    halfNote,
+    wholeNote,
+    doubleWholeNote,
+    quadrupleWholeNote,
+    octupleWholeNote,
+    demisemihemidemisemiquaver = twoHundredFiftySixthNote,
+    semihemidemisemiquaver = oneHundredTwentyEighthNote,
+    hemidemisemiquaver = sixtyFourthNote,
+    demisemiquaver = thirtySecondNote,
+    semiquaver = sixteenthNote,
+    quaver = eighthNote,
+    crotchet = quarterNote,
+    minim = halfNote,
+    semibreve = wholeNote,
+    breve = doubleWholeNote,
+    longa = quadrupleWholeNote,
+    maxima = octupleWholeNote,
 };
 
-constexpr Fraction relativeValue(const BasicNoteValue& value) noexcept;
-
-constexpr bool operator==(const BasicNoteValue& left, const BasicNoteValue& right) noexcept;
-constexpr bool operator!=(const BasicNoteValue& left, const BasicNoteValue& right) noexcept;
-constexpr bool operator<(const BasicNoteValue& left, const BasicNoteValue& right) noexcept;
-constexpr bool operator<=(const BasicNoteValue& left, const BasicNoteValue& right) noexcept;
-constexpr bool operator>(const BasicNoteValue& left, const BasicNoteValue& right) noexcept;
-constexpr bool operator>=(const BasicNoteValue& left, const BasicNoteValue& right) noexcept;
+constexpr Fraction relativeValue(NoteValueBase value) noexcept;
 
 
 enum Tuplet {
@@ -55,16 +62,16 @@ constexpr Fraction calculateDotAugmentation(std::size_t numDots) noexcept;
 class NoteValue final {
 
 public:
+    using Base = NoteValueBase;
+
     static constexpr std::size_t maxNumDots = sizeof(long long) * CHAR_BIT - 1;
 
     constexpr NoteValue() noexcept = default;
-    constexpr NoteValue(const BasicNoteValue& base,
-                        Tuplet tuplet = duplet,
-                        std::size_t numDots = 0) noexcept;
-    constexpr NoteValue(const BasicNoteValue& base, std::size_t numDots) noexcept;
+    constexpr NoteValue(Base base, Tuplet tuplet = duplet, std::size_t numDots = 0) noexcept;
+    constexpr NoteValue(Base base, std::size_t numDots) noexcept;
     constexpr NoteValue(const UnitFraction& unitFraction) noexcept;
 
-    constexpr const BasicNoteValue& getBase() const noexcept { return base_; }
+    constexpr Base getBase() const noexcept { return base_; }
     constexpr Tuplet getTuplet() const noexcept { return tuplet_; }
     constexpr std::size_t getNumDots() const noexcept { return numDots_; }
 
@@ -76,7 +83,7 @@ public:
                                         const NoteValue& divisor) noexcept;
 
 private:
-    BasicNoteValue base_;
+    Base base_ = wholeNote;
     Tuplet tuplet_ = duplet;
     std::size_t numDots_ = {};
 };
@@ -97,49 +104,9 @@ constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor
 // =================================================================================================
 
 
-constexpr BasicNoteValue::BasicNoteValue(const int baseTwoExponent) noexcept :
-    baseTwoExponent_ {baseTwoExponent}
+constexpr Fraction relativeValue(const NoteValueBase value) noexcept
 {
-}
-
-constexpr Fraction BasicNoteValue::relativeValue() const noexcept
-{
-    return fractionPow2(baseTwoExponent_);
-}
-
-constexpr Fraction relativeValue(const BasicNoteValue& value) noexcept
-{
-    return value.relativeValue();
-}
-
-constexpr bool operator==(const BasicNoteValue& left, const BasicNoteValue& right) noexcept
-{
-    return relativeValue(left) == relativeValue(right);
-}
-
-constexpr bool operator!=(const BasicNoteValue& left, const BasicNoteValue& right) noexcept
-{
-    return !(left == right);
-}
-
-constexpr bool operator<(const BasicNoteValue& left, const BasicNoteValue& right) noexcept
-{
-    return relativeValue(left) < relativeValue(right);
-}
-
-constexpr bool operator<=(const BasicNoteValue& left, const BasicNoteValue& right) noexcept
-{
-    return !(left > right);
-}
-
-constexpr bool operator>(const BasicNoteValue& left, const BasicNoteValue& right) noexcept
-{
-    return right < left;
-}
-
-constexpr bool operator>=(const BasicNoteValue& left, const BasicNoteValue& right) noexcept
-{
-    return !(left > right);
+    return fractionPow2(value);
 }
 
 constexpr Fraction calculateTupletFactor(const Tuplet tuplet) noexcept
@@ -158,7 +125,7 @@ constexpr Fraction calculateDotAugmentation(const std::size_t numDots) noexcept
     return 2 - fractionPow2(-static_cast<int>(numDots));
 }
 
-constexpr NoteValue::NoteValue(const BasicNoteValue& base,
+constexpr NoteValue::NoteValue(const Base base,
                                const Tuplet tuplet,
                                const std::size_t numDots) noexcept :
     base_ {base},
@@ -167,7 +134,7 @@ constexpr NoteValue::NoteValue(const BasicNoteValue& base,
 {
 }
 
-constexpr NoteValue::NoteValue(const BasicNoteValue& base, const std::size_t numDots) noexcept :
+constexpr NoteValue::NoteValue(const Base base, const std::size_t numDots) noexcept :
     NoteValue {base, duplet, numDots}
 {
 }
@@ -183,7 +150,7 @@ constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
         return result;
     }();
 
-    base_ = -greatestDivisiblePow2Exponent - 1;
+    base_ = static_cast<Base>(-greatestDivisiblePow2Exponent - 1);
 
     const auto tupletValue
         = reciprocalOf(unitFraction) / fractionPow2(greatestDivisiblePow2Exponent);
@@ -193,7 +160,7 @@ constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
 
 constexpr Fraction NoteValue::relativeValue() const noexcept
 {
-    return base_.relativeValue() * calculateTupletFactor(tuplet_)
+    return ::Cbb::relativeValue(base_) * calculateTupletFactor(tuplet_)
            * calculateDotAugmentation(numDots_);
 }
 
@@ -241,32 +208,6 @@ constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor
 {
     return relativeValue(dividend) % relativeValue(divisor);
 }
-
-static constexpr BasicNoteValue octupleWholeNote = 3;
-static constexpr BasicNoteValue quadrupleWholeNote = 2;
-static constexpr BasicNoteValue doubleWholeNote = 1;
-static constexpr BasicNoteValue wholeNote = 0;
-static constexpr BasicNoteValue halfNote = -1;
-static constexpr BasicNoteValue quarterNote = -2;
-static constexpr BasicNoteValue eighthNote = -3;
-static constexpr BasicNoteValue sixteenthNote = -4;
-static constexpr BasicNoteValue thirtySecondNote = -5;
-static constexpr BasicNoteValue sixtyFourthNote = -6;
-static constexpr BasicNoteValue oneHundredTwentyEighthNote = -7;
-static constexpr BasicNoteValue twoHundredFiftySixthNote = -8;
-
-static constexpr BasicNoteValue maxima = octupleWholeNote;
-static constexpr BasicNoteValue longa = quadrupleWholeNote;
-static constexpr BasicNoteValue breve = doubleWholeNote;
-static constexpr BasicNoteValue semibreve = wholeNote;
-static constexpr BasicNoteValue minim = halfNote;
-static constexpr BasicNoteValue crotchet = quarterNote;
-static constexpr BasicNoteValue quaver = eighthNote;
-static constexpr BasicNoteValue semiquaver = sixteenthNote;
-static constexpr BasicNoteValue demisemiquaver = thirtySecondNote;
-static constexpr BasicNoteValue hemidemisemiquaver = sixtyFourthNote;
-static constexpr BasicNoteValue semihemidemisemiquaver = oneHundredTwentyEighthNote;
-static constexpr BasicNoteValue demisemihemidemisemiquaver = twoHundredFiftySixthNote;
 
 
 }; // namespace Cbb
