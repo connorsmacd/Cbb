@@ -174,3 +174,146 @@ TEST_CASE("Using the remainder operator on two note values gives the remainder o
     REQUIRE(NoteValue(eighthNote, septuplet, 2) % NoteValue(thirtySecondNote, 1)
             == Fraction(1, 64));
 }
+
+TEST_CASE("A default-constructed composite note value is a single whole note", "[NoteValue]")
+{
+    const auto cnv = CompositeNoteValue();
+
+    REQUIRE(cnv.getSize() == 1);
+    REQUIRE(cnv[0] == wholeNote);
+}
+
+TEST_CASE(
+    "A composite note value constructed with a just a base is a single note value of said base",
+    "[NoteValue]")
+{
+    const auto cnv = CompositeNoteValue(eighthNote);
+
+    REQUIRE(cnv.getSize() == 1);
+    REQUIRE(cnv[0] == eighthNote);
+}
+
+TEST_CASE("A composite note value constructed with an initializer produces the specified sequence "
+          "of note values (tied)",
+          "[NoteValue]")
+{
+    const auto cnv = CompositeNoteValue({{quarterNote, triplet, 2}, eighthNote});
+
+    REQUIRE(cnv.getSize() == 2);
+    REQUIRE(cnv[0] == NoteValue(quarterNote, triplet, 2));
+    REQUIRE(cnv[1] == eighthNote);
+}
+
+TEST_CASE("A composite note value's relative value is the sum of its continuent note values' "
+          "relative values",
+          "[NoteValue]")
+{
+    const auto a = NoteValue(eighthNote, quintuplet, 4);
+    const auto b = NoteValue(sixteenthNote, triplet, 2);
+    const auto c = CompositeNoteValue({a, b});
+
+    REQUIRE(relativeValue(c) == relativeValue(a) + relativeValue(b));
+}
+
+TEST_CASE("Two note values of equal relative value are equivalent", "[NoteValue]")
+{
+    SECTION("Symbollically identical note values")
+    {
+        REQUIRE(CompositeNoteValue({wholeNote, {eighthNote, triplet, 2}})
+                == CompositeNoteValue({wholeNote, {eighthNote, triplet, 2}}));
+        REQUIRE_FALSE(CompositeNoteValue({wholeNote, {eighthNote, triplet, 2}})
+                      != CompositeNoteValue({wholeNote, {eighthNote, triplet, 2}}));
+    }
+
+    SECTION("Symbollically different note values")
+    {
+        REQUIRE(CompositeNoteValue({{eighthNote, triplet, 2}, wholeNote})
+                == CompositeNoteValue({wholeNote, {eighthNote, triplet, 2}}));
+        REQUIRE_FALSE(CompositeNoteValue({{eighthNote, triplet, 2}, wholeNote})
+                      != CompositeNoteValue({wholeNote, {eighthNote, triplet, 2}}));
+    }
+}
+
+TEST_CASE("A composite note value of lesser relative value is less than a composite note value of "
+          "greater relative value",
+          "[NoteValue]")
+{
+    REQUIRE(CompositeNoteValue({quarterNote, eighthNote})
+            < CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+    REQUIRE(CompositeNoteValue({quarterNote, eighthNote})
+            <= CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+    REQUIRE_FALSE(CompositeNoteValue({quarterNote, eighthNote})
+                  >= CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+    REQUIRE_FALSE(CompositeNoteValue({quarterNote, eighthNote})
+                  > CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+}
+
+TEST_CASE("A composite note value of greater relative value is greater than a composite note value "
+          "of lesser relative value",
+          "[NoteValue]")
+{
+    REQUIRE_FALSE(CompositeNoteValue({quarterNote, eighthNote})
+                  < CompositeNoteValue({{eighthNote, triplet}, eighthNote}));
+    REQUIRE_FALSE(CompositeNoteValue({quarterNote, eighthNote})
+                  <= CompositeNoteValue({{eighthNote, triplet}, eighthNote}));
+    REQUIRE(CompositeNoteValue({quarterNote, eighthNote})
+            >= CompositeNoteValue({{eighthNote, triplet}, eighthNote}));
+    REQUIRE(CompositeNoteValue({quarterNote, eighthNote})
+            > CompositeNoteValue({{eighthNote, triplet}, eighthNote}));
+}
+
+TEST_CASE("A composite note value is neither less than nor greater than a composite note value "
+          "with the same relative value",
+          "[NoteValue]")
+{
+    REQUIRE_FALSE(CompositeNoteValue({{wholeNote, triplet}, eighthNote})
+                  < CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+    REQUIRE(CompositeNoteValue({{wholeNote, triplet}, eighthNote})
+            <= CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+    REQUIRE(CompositeNoteValue({{wholeNote, triplet}, eighthNote})
+            >= CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+    REQUIRE_FALSE(CompositeNoteValue({{wholeNote, triplet}, eighthNote})
+                  > CompositeNoteValue({{wholeNote, triplet}, eighthNote}));
+}
+
+TEST_CASE("Appending to a note value places note values onto the end of a composite note value",
+          "[NoteValue]")
+{
+    SECTION("Appending a single note value")
+    {
+        auto a = CompositeNoteValue({wholeNote, eighthNote});
+        const auto b = NoteValue(quarterNote);
+
+        REQUIRE(a.append(b) == CompositeNoteValue({wholeNote, eighthNote, quarterNote}));
+    }
+
+    SECTION("Appending a composite note value")
+    {
+        auto a = CompositeNoteValue({eighthNote, sixteenthNote});
+        const auto b = CompositeNoteValue({thirtySecondNote, wholeNote});
+
+        REQUIRE(a.append(b)
+                == CompositeNoteValue({eighthNote, sixteenthNote, thirtySecondNote, wholeNote}));
+    }
+}
+
+TEST_CASE("Prepending to a note vlaue places note values onto the start of a composite note value",
+          "[NoteValue]")
+{
+    SECTION("Prepending a single note value")
+    {
+        auto a = CompositeNoteValue({wholeNote, eighthNote});
+        const auto b = NoteValue(quarterNote);
+
+        REQUIRE(a.prepend(b) == CompositeNoteValue({quarterNote, wholeNote, eighthNote}));
+    }
+
+    SECTION("Prepending a composite note value")
+    {
+        auto a = CompositeNoteValue({eighthNote, sixteenthNote});
+        const auto b = CompositeNoteValue({thirtySecondNote, wholeNote});
+
+        REQUIRE(a.prepend(b)
+                == CompositeNoteValue({thirtySecondNote, wholeNote, eighthNote, sixteenthNote}));
+    }
+}

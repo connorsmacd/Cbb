@@ -10,7 +10,7 @@
 namespace Cbb {
 
 
-// Each enumerator value is the base 2 log of its relative value
+// Each enumerator value is the binary log of its relative value
 enum NoteValueBase {
     twoHundredFiftySixthNote = -8,
     oneHundredTwentyEighthNote,
@@ -99,6 +99,46 @@ constexpr bool operator>=(const NoteValue& left, const NoteValue& right) noexcep
 
 constexpr Fraction operator/(const NoteValue& dividend, const NoteValue& divisor) noexcept;
 constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor) noexcept;
+
+
+// Uniformly represents either a single note value or a sequence of tied note values
+// TODO: nested tuplets?
+class CompositeNoteValue final {
+
+public:
+    CompositeNoteValue() = default;
+    CompositeNoteValue(NoteValueBase base);
+    CompositeNoteValue(const NoteValue& value);
+    CompositeNoteValue(std::initializer_list<NoteValue> values);
+    CompositeNoteValue(const Fraction& relativeValue);
+
+    CompositeNoteValue& append(const NoteValue& value);
+    CompositeNoteValue& append(const CompositeNoteValue& other);
+
+    CompositeNoteValue& prepend(const NoteValue& value);
+    CompositeNoteValue& prepend(const CompositeNoteValue& other);
+
+    const NoteValue& operator[](std::size_t index) const;
+    NoteValue& operator[](std::size_t index);
+
+    std::size_t getSize() const noexcept { return values_.size(); }
+
+    Fraction relativeValue() const noexcept;
+
+    // TODO: make this a range
+
+private:
+    std::vector<NoteValue> values_ = {wholeNote};
+};
+
+Fraction relativeValue(const CompositeNoteValue& value) noexcept;
+
+bool operator==(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
+bool operator!=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
+bool operator<(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
+bool operator<=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
+bool operator>(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
+bool operator>=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
 
 
 // =================================================================================================
