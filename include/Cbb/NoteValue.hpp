@@ -113,10 +113,10 @@ public:
     CompositeNoteValue(const Fraction& relativeValue);
 
     CompositeNoteValue& append(const NoteValue& value);
-    CompositeNoteValue& append(const CompositeNoteValue& other);
+    CompositeNoteValue& append(const CompositeNoteValue& value);
 
     CompositeNoteValue& prepend(const NoteValue& value);
-    CompositeNoteValue& prepend(const CompositeNoteValue& other);
+    CompositeNoteValue& prepend(const CompositeNoteValue& value);
 
     const NoteValue& operator[](std::size_t index) const;
     NoteValue& operator[](std::size_t index);
@@ -139,6 +139,9 @@ bool operator<(const CompositeNoteValue& left, const CompositeNoteValue& right) 
 bool operator<=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
 bool operator>(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
 bool operator>=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept;
+
+CompositeNoteValue operator+(const NoteValue& left, const NoteValue& right);
+CompositeNoteValue operator+(const CompositeNoteValue& left, const CompositeNoteValue& right);
 
 
 // =================================================================================================

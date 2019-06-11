@@ -317,3 +317,40 @@ TEST_CASE("Prepending to a note vlaue places note values onto the start of a com
                 == CompositeNoteValue({thirtySecondNote, wholeNote, eighthNote, sixteenthNote}));
     }
 }
+
+TEST_CASE("Adding one note value(s) to another produces a composite note value that is the left "
+          "note value(s) tied with the right note value(s)",
+          "[NoteValue]")
+{
+    SECTION("Two single note values")
+    {
+        const auto a = NoteValue(thirtySecondNote);
+        const auto b = NoteValue(wholeNote);
+
+        REQUIRE(a + b == CompositeNoteValue({thirtySecondNote, wholeNote}));
+    }
+
+    SECTION("A composite note value and a single note value")
+    {
+        const auto a = CompositeNoteValue({thirtySecondNote, eighthNote});
+        const auto b = NoteValue(wholeNote);
+
+        REQUIRE(a + b == CompositeNoteValue({thirtySecondNote, eighthNote, wholeNote}));
+    }
+
+    SECTION("A composite note value and a single note value")
+    {
+        const auto a = NoteValue(wholeNote);
+        const auto b = CompositeNoteValue({thirtySecondNote, eighthNote});
+
+        REQUIRE(a + b == CompositeNoteValue({wholeNote, thirtySecondNote, eighthNote}));
+    }
+
+    SECTION("Two composite note values")
+    {
+        const auto a = CompositeNoteValue({wholeNote, halfNote});
+        const auto b = CompositeNoteValue({thirtySecondNote, eighthNote});
+
+        REQUIRE(a + b == CompositeNoteValue({wholeNote, halfNote, thirtySecondNote, eighthNote}));
+    }
+}

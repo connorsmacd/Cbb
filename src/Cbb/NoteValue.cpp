@@ -32,9 +32,9 @@ CompositeNoteValue& CompositeNoteValue::append(const NoteValue& value)
     return *this;
 }
 
-CompositeNoteValue& CompositeNoteValue::append(const CompositeNoteValue& other)
+CompositeNoteValue& CompositeNoteValue::append(const CompositeNoteValue& value)
 {
-    values_.insert(values_.end(), other.values_.begin(), other.values_.end());
+    values_.insert(values_.end(), value.values_.begin(), value.values_.end());
     return *this;
 }
 
@@ -44,9 +44,9 @@ CompositeNoteValue& CompositeNoteValue::prepend(const NoteValue& value)
     return *this;
 }
 
-CompositeNoteValue& CompositeNoteValue::prepend(const CompositeNoteValue& other)
+CompositeNoteValue& CompositeNoteValue::prepend(const CompositeNoteValue& value)
 {
-    values_.insert(values_.begin(), other.values_.begin(), other.values_.end());
+    values_.insert(values_.begin(), value.values_.begin(), value.values_.end());
     return *this;
 }
 
@@ -81,7 +81,7 @@ bool operator==(const CompositeNoteValue& left, const CompositeNoteValue& right)
 
 bool operator!=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept
 {
-    return !(left == right);
+    return !(left == right); 
 }
 
 bool operator<(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept
@@ -102,6 +102,16 @@ bool operator>(const CompositeNoteValue& left, const CompositeNoteValue& right) 
 bool operator>=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept
 {
     return !(left < right);
+}
+
+CompositeNoteValue operator+(const NoteValue& left, const NoteValue& right)
+{
+    return CompositeNoteValue(left).append(right);
+}
+
+CompositeNoteValue operator+(const CompositeNoteValue& left, const CompositeNoteValue& right)
+{
+    return CompositeNoteValue(left).append(right);
 }
 
 
