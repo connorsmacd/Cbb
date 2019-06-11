@@ -22,10 +22,6 @@ CompositeNoteValue::CompositeNoteValue(const std::initializer_list<NoteValue> va
         throw std::invalid_argument("a composite note value cannot be empty");
 }
 
-CompositeNoteValue::CompositeNoteValue(const Fraction& relativeValue)
-{
-}
-
 CompositeNoteValue& CompositeNoteValue::append(const CompositeNoteValue& value)
 {
     values_.insert(values_.end(), value.values_.begin(), value.values_.end());
