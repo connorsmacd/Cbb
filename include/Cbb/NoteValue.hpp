@@ -112,10 +112,9 @@ public:
     CompositeNoteValue(std::initializer_list<NoteValue> values);
     CompositeNoteValue(const Fraction& relativeValue);
 
-    CompositeNoteValue& append(const NoteValue& value);
     CompositeNoteValue& append(const CompositeNoteValue& value);
+    CompositeNoteValue& operator+=(const CompositeNoteValue& value);
 
-    CompositeNoteValue& prepend(const NoteValue& value);
     CompositeNoteValue& prepend(const CompositeNoteValue& value);
 
     const NoteValue& operator[](std::size_t index) const;

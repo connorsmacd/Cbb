@@ -26,22 +26,15 @@ CompositeNoteValue::CompositeNoteValue(const Fraction& relativeValue)
 {
 }
 
-CompositeNoteValue& CompositeNoteValue::append(const NoteValue& value)
-{
-    values_.push_back(value);
-    return *this;
-}
-
 CompositeNoteValue& CompositeNoteValue::append(const CompositeNoteValue& value)
 {
     values_.insert(values_.end(), value.values_.begin(), value.values_.end());
     return *this;
 }
 
-CompositeNoteValue& CompositeNoteValue::prepend(const NoteValue& value)
+CompositeNoteValue& CompositeNoteValue::operator+=(const CompositeNoteValue& value)
 {
-    values_.insert(values_.begin(), value);
-    return *this;
+    return append(value);
 }
 
 CompositeNoteValue& CompositeNoteValue::prepend(const CompositeNoteValue& value)
