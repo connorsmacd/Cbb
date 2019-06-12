@@ -16,7 +16,7 @@ struct PitchClassLabel final {
     Letter letter = C;
     Accidental accidental = natural;
 
-    constexpr PitchClassLabel() = default;
+    constexpr PitchClassLabel() noexcept = default;
     constexpr PitchClassLabel(Letter initLetter, Accidental initAccidental = natural);
 };
 
@@ -31,7 +31,7 @@ struct PitchLabel final {
     Accidental accidental = natural;
     int octave = {};
 
-    constexpr PitchLabel() = default;
+    constexpr PitchLabel() noexcept = default;
     constexpr PitchLabel(Letter initLetter, Accidental initAccidental, int initOctave) noexcept;
     constexpr PitchLabel(Letter initLetter, int initOctave) noexcept;
     constexpr PitchLabel(const PitchClassLabel& label, int initOctave) noexcept;
@@ -46,7 +46,7 @@ constexpr bool operator!=(const PitchLabel& left, const PitchLabel& right) noexc
 class Pitch final {
 
 public:
-    constexpr Pitch() = default;
+    constexpr Pitch() noexcept = default;
     constexpr Pitch(int cLass, int octave) noexcept;
     constexpr Pitch(Letter letter, Accidental accidental, int octave) noexcept;
     constexpr Pitch(const PitchLabel& label) noexcept;
