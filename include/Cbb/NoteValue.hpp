@@ -182,10 +182,12 @@ constexpr NoteValue::NoteValue(const Base base, const std::size_t numDots) noexc
 
 constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
 {
+    const auto numDivisions = reciprocalOf(unitFraction);
+
     const auto greatestDivisiblePow2Exponent = [=]() {
         int result {1};
 
-        while (reciprocalOf(unitFraction) % fractionPow2(result + 1) == 0)
+        while (numDivisions % fractionPow2(result + 1) == 0)
             ++result;
 
         return result;
@@ -193,9 +195,7 @@ constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
 
     base_ = static_cast<Base>(-greatestDivisiblePow2Exponent - 1);
 
-    const auto tupletValue
-        = reciprocalOf(unitFraction) / fractionPow2(greatestDivisiblePow2Exponent);
-
+    const auto tupletValue = numDivisions / fractionPow2(greatestDivisiblePow2Exponent);
     tuplet_ = static_cast<Tuplet>(numerator(reduce(tupletValue)));
 }
 
