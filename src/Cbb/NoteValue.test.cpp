@@ -354,3 +354,23 @@ TEST_CASE("Adding one note value(s) to another produces a composite note value t
         REQUIRE(a + b == CompositeNoteValue({wholeNote, halfNote, thirtySecondNote, eighthNote}));
     }
 }
+
+TEST_CASE("Dividing one composite note value by another gives the ratio between them",
+          "[NoteValue]")
+{
+    const auto a = CompositeNoteValue({halfNote, eighthNote});
+    const auto b = CompositeNoteValue({wholeNote, sixteenthNote});
+
+    REQUIRE(a / b == Fraction(10, 17));
+}
+
+TEST_CASE(
+    "Using the remainder operator on two composite note values gives the remainder of the division "
+    "between them",
+    "[NoteValue]")
+{
+    const auto a = CompositeNoteValue({wholeNote, sixteenthNote});
+    const auto b = CompositeNoteValue({halfNote, eighthNote});
+
+    REQUIRE(a % b == Fraction(7, 16));
+}

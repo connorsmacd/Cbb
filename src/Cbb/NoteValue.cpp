@@ -103,5 +103,15 @@ CompositeNoteValue operator+(const CompositeNoteValue& left, const CompositeNote
     return CompositeNoteValue(left).append(right);
 }
 
+Fraction operator/(const CompositeNoteValue& dividend, const CompositeNoteValue& divisor) noexcept
+{
+    return relativeValue(dividend) / relativeValue(divisor);
+}
+
+Fraction operator%(const CompositeNoteValue& dividend, const CompositeNoteValue& divisor) noexcept
+{
+    return relativeValue(dividend) % relativeValue(divisor);
+}
+
 
 }; // namespace Cbb

@@ -141,6 +141,9 @@ bool operator>=(const CompositeNoteValue& left, const CompositeNoteValue& right)
 CompositeNoteValue operator+(const NoteValue& left, const NoteValue& right);
 CompositeNoteValue operator+(const CompositeNoteValue& left, const CompositeNoteValue& right);
 
+Fraction operator/(const CompositeNoteValue& dividend, const CompositeNoteValue& divisor) noexcept;
+Fraction operator%(const CompositeNoteValue& dividend, const CompositeNoteValue& divisor) noexcept;
+
 
 // =================================================================================================
 
