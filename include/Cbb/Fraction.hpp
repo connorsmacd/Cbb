@@ -90,7 +90,7 @@ public:
     constexpr const Fraction& toFraction() const noexcept { return fraction_; }
 
 private:
-    Fraction fraction_;
+    Fraction fraction_ = 1;
 };
 
 
