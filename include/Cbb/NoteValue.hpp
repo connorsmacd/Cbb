@@ -187,18 +187,18 @@ constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
 {
     const auto numDivisions = reciprocalOf(unitFraction);
 
-    const auto greatestDivisiblePow2Exponent = [=]() {
-        int result {1};
-
-        while (numDivisions % fractionPow2(result + 1) == 0)
-            ++result;
-
-        return result;
+    // Get the exponent of the largest power of 2 that divides the number of divisions
+    const auto exponentOfGreatestDivisiblePow2 = [=]() {
+        for (int result = 1; true; ++result)
+        {
+            if (numDivisions % fractionPow2(result + 1) != 0)
+                return result;
+        }
     }();
 
-    base_ = static_cast<Base>(-greatestDivisiblePow2Exponent - 1);
+    base_ = static_cast<Base>(-exponentOfGreatestDivisiblePow2 - 1);
 
-    const auto tupletValue = numDivisions / fractionPow2(greatestDivisiblePow2Exponent);
+    const auto tupletValue = numDivisions / fractionPow2(exponentOfGreatestDivisiblePow2);
     tuplet_ = static_cast<Tuplet>(numerator(reduce(tupletValue)));
 }
 
