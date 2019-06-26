@@ -7,7 +7,7 @@
 using namespace Cbb;
 
 
-TEST_CASE("A pitch class label can be default constructed to C natural", "[Pitch]")
+TEST_CASE("A default-constructed pitch class label is C natural", "[Pitch]")
 {
     constexpr auto p = PitchClassLabel();
 
@@ -15,7 +15,7 @@ TEST_CASE("A pitch class label can be default constructed to C natural", "[Pitch
     REQUIRE(p.accidental == natural);
 }
 
-TEST_CASE("A pitch class label can be constructed with just a letter", "[Pitch]")
+TEST_CASE("A pitch class label constructed with just a letter is the letter natural", "[Pitch]")
 {
     constexpr auto p = PitchClassLabel(G);
 
@@ -23,7 +23,8 @@ TEST_CASE("A pitch class label can be constructed with just a letter", "[Pitch]"
     REQUIRE(p.accidental == natural);
 }
 
-TEST_CASE("A pitch class label can be constructed with a letter and accidental", "[Pitch]")
+TEST_CASE("A pitch class label constructed with a letter and accidental is the expected label",
+          "[Pitch]")
 {
     constexpr auto p = PitchClassLabel(D, sharp);
 
