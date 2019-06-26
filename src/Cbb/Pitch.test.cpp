@@ -162,6 +162,26 @@ TEST_CASE("A pitch can be constructed from a frequency and tuning", "[Pitch]")
     REQUIRE(p.getOctave() == 4);
 }
 
+TEST_CASE("Transposing a pitch by semitones raises the pitch by the specified number of semitones",
+          "[Pitch]")
+{
+    REQUIRE(Pitch(PitchLabel(G, -1)).transposeSemitones(17) == Pitch(PitchLabel(C, 1)));
+    REQUIRE(transposedSemitones(Pitch(PitchLabel(G, -1)), 17) == Pitch(PitchLabel(C, 1)));
+
+    REQUIRE(Pitch(PitchLabel(C, 1)).transposeSemitones(-17) == Pitch(PitchLabel(G, -1)));
+    REQUIRE(transposedSemitones(Pitch(PitchLabel(C, 1)), -17) == Pitch(PitchLabel(G, -1)));
+}
+
+TEST_CASE("Transposing a pitch by octaves raises the pitch by the specified number of octaves",
+          "[Pitch]")
+{
+    REQUIRE(Pitch(PitchLabel(G, -1)).transposeOctaves(2) == Pitch(PitchLabel(G, 1)));
+    REQUIRE(transposedOctaves(Pitch(PitchLabel(G, -1)), 2) == Pitch(PitchLabel(G, 1)));
+
+    REQUIRE(Pitch(PitchLabel(G, 1)).transposeOctaves(-2) == Pitch(PitchLabel(G, -1)));
+    REQUIRE(transposedOctaves(Pitch(PitchLabel(G, 1)), -2) == Pitch(PitchLabel(G, -1)));
+}
+
 TEST_CASE("A pitch's MIDI note number can be retrieved", "[Pitch]")
 {
     REQUIRE(Pitch(Midi::As5).getNoteNumber() == Midi::As5);

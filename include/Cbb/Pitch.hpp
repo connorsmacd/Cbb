@@ -48,10 +48,12 @@ class Pitch final {
 public:
     constexpr Pitch() noexcept = default;
     constexpr Pitch(int cLass, int octave) noexcept;
-    constexpr Pitch(Letter letter, Accidental accidental, int octave) noexcept;
     constexpr Pitch(const PitchLabel& label) noexcept;
     constexpr Pitch(Midi::NoteNumber number) noexcept;
     Pitch(double frequencyHz, Tuning tuning = A440) noexcept;
+
+    constexpr Pitch& transposeSemitones(int semitones) noexcept;
+    constexpr Pitch& transposeOctaves(int octaves) noexcept;
 
     constexpr int getClass() const noexcept { return class_; }
     constexpr int getOctave() const noexcept { return octave_; }
@@ -68,6 +70,9 @@ public:
 private:
     int class_ = {}, octave_ = {};
 };
+
+constexpr Pitch transposedSemitones(const Pitch& original, int semitones) noexcept;
+constexpr Pitch transposedOctaves(const Pitch& original, int octaves) noexcept;
 
 
 // =================================================================================================
@@ -133,15 +138,8 @@ constexpr Pitch::Pitch(const int cLass, const int octave) noexcept :
 {
 }
 
-constexpr Pitch::Pitch(const Letter letter,
-                       const Accidental accidental,
-                       const int octave) noexcept :
-    Pitch {toPitchClass({letter, accidental}), octave}
-{
-}
-
 constexpr Pitch::Pitch(const PitchLabel& label) noexcept :
-    Pitch {label.letter, label.accidental, label.octave}
+    Pitch {toPitchClass(label), label.octave}
 {
 }
 
@@ -149,6 +147,30 @@ constexpr Pitch::Pitch(const Midi::NoteNumber number) noexcept :
     class_ {number % 12},
     octave_ {number / 12 - 1}
 {
+}
+
+constexpr Pitch& Pitch::transposeSemitones(const int semitones) noexcept
+{
+    class_ += semitones % 12;
+
+    if (class_ >= 12 )
+    {
+        class_ -= 12;
+        transposeOctaves(1);
+    }
+    else if (class_ < 0)
+    {
+        class_ += 12;
+        transposeOctaves(-1);
+    }
+
+    return transposeOctaves(semitones / 12);
+}
+
+constexpr Pitch& Pitch::transposeOctaves(const int octaves) noexcept
+{
+    octave_ += octaves;
+    return *this;
 }
 
 constexpr Midi::NoteNumber Pitch::getNoteNumber() const noexcept
@@ -185,6 +207,16 @@ constexpr bool operator>(const Pitch& left, const Pitch& right) noexcept
 constexpr bool operator>=(const Pitch& left, const Pitch& right) noexcept
 {
     return !(left < right);
+}
+
+constexpr Pitch transposedSemitones(const Pitch& original, const int semitones) noexcept
+{
+    return Pitch(original).transposeSemitones(semitones);
+}
+
+constexpr Pitch transposedOctaves(const Pitch& original, const int octaves) noexcept
+{
+    return Pitch(original).transposeOctaves(octaves);
 }
 
 
