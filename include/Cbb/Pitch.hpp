@@ -138,8 +138,7 @@ constexpr Pitch::Pitch(const int cLass, const int octave) noexcept :
 {
 }
 
-constexpr Pitch::Pitch(const PitchLabel& label) noexcept :
-    Pitch {toPitchClass(label), label.octave}
+constexpr Pitch::Pitch(const PitchLabel& label) noexcept : Pitch {toPitchClass(label), label.octave}
 {
 }
 
@@ -153,7 +152,7 @@ constexpr Pitch& Pitch::transposeSemitones(const int semitones) noexcept
 {
     class_ += semitones % 12;
 
-    if (class_ >= 12 )
+    if (class_ >= 12)
     {
         class_ -= 12;
         transposeOctaves(1);
