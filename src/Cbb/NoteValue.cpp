@@ -70,7 +70,7 @@ bool operator==(const CompositeNoteValue& left, const CompositeNoteValue& right)
 
 bool operator!=(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept
 {
-    return !(left == right); 
+    return !(left == right);
 }
 
 bool operator<(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept
