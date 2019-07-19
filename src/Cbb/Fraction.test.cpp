@@ -202,6 +202,10 @@ TEST_CASE("A fraction's reciprocal can be calculated", "[Fraction]")
     REQUIRE(reciprocalOf(Fraction(4, 19)) == Fraction(19, 4));
 }
 
+TEST_CASE("The \"unit\" of a fraction is 1 over its denominator", "[Fraction]")
+{
+}
+
 TEST_CASE("A fraction can be converted to a decimal", "[Fraction]")
 {
     REQUIRE(toDecimal(Fraction(4, 5)) == 0.8L);
@@ -294,6 +298,13 @@ TEST_CASE("An undefined fraction is neither negative nor positive", "[Fraction]"
 TEST_CASE("A fraction with a numerator that divides the denominator is an integer", "[Fraction]")
 {
     REQUIRE(isInteger(Fraction(4, 2)));
+    REQUIRE_FALSE(isInteger(Fraction(4, 3)));
+}
+
+TEST_CASE("A fraction that is the reciprocal of an integer is a unit fraction", "[Fraction]")
+{
+    REQUIRE(isUnitFraction(Fraction(2, 4)));
+    REQUIRE_FALSE(isUnitFraction(Fraction(3, 4)));
 }
 
 TEST_CASE("A fraction with a numerator that does not divide the denominator is not an integer",

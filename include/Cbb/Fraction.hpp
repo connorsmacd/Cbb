@@ -9,6 +9,9 @@
 namespace Cbb {
 
 
+class UnitFraction;
+
+
 class Fraction final {
 
 public:
@@ -66,6 +69,8 @@ constexpr Fraction reduce(const Fraction& fraction) noexcept;
 
 constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept;
 
+constexpr UnitFraction unitOf(const Fraction& fraction) noexcept;
+
 constexpr long double toDecimal(const Fraction& fraction) noexcept;
 
 constexpr Fraction fractionPow2(int exponent) noexcept;
@@ -76,6 +81,7 @@ constexpr bool isPositive(const Fraction& fraction) noexcept;
 constexpr bool isNegative(const Fraction& fraction) noexcept;
 constexpr bool isZero(const Fraction& fraction) noexcept;
 constexpr bool isInteger(const Fraction& fraction) noexcept;
+constexpr bool isUnitFraction(const Fraction& fraction) noexcept;
 constexpr bool isDefined(const Fraction& fraction) noexcept;
 constexpr bool isUndefined(const Fraction& fraction) noexcept;
 
@@ -283,6 +289,11 @@ constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept
     return {fraction.den(), fraction.num()};
 }
 
+constexpr UnitFraction unitOf(const Fraction& fraction) noexcept
+{
+    return isPositive(fraction) ? std::abs(fraction.den()) : -std::abs(fraction.den());
+}
+
 constexpr long double toDecimal(const Fraction& fraction) noexcept
 {
     return static_cast<long double>(fraction.num()) / static_cast<long double>(fraction.den());
@@ -316,10 +327,12 @@ constexpr bool isZero(const Fraction& fraction) noexcept
 
 constexpr bool isInteger(const Fraction& fraction) noexcept
 {
-    if (isUndefined(fraction))
-        return false;
+    return isDefined(fraction) && fraction.num() % fraction.den() == 0;
+}
 
-    return 0 == fraction.num() % fraction.den();
+constexpr bool isUnitFraction(const Fraction& fraction) noexcept
+{
+    return isInteger(reciprocalOf(fraction));
 }
 
 constexpr bool isDefined(const Fraction& fraction) noexcept
