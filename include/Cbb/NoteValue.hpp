@@ -188,10 +188,13 @@ constexpr NoteValue::NoteValue(const UnitFraction& unitFraction) noexcept
     const auto numDivisions = reciprocalOf(unitFraction);
 
     // Get the exponent of the largest power of 2 that divides the number of divisions
+    // and is not equal to the number of divisions
     const auto exponentOfGreatestDivisiblePow2 = [=]() {
         for (int result = 1; true; ++result)
         {
-            if (numDivisions % fractionPow2(result + 1) != 0)
+            const auto nextPow2 = fractionPow2(result + 1);
+
+            if (numDivisions % nextPow2 != 0 || numDivisions == nextPow2)
                 return result;
         }
     }();
