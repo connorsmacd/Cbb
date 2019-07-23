@@ -256,6 +256,13 @@ TEST_CASE("A fraction can be rounded")
     REQUIRE(round(Fraction(-2)) == -2);
 }
 
+TEST_CASE("A fraction's absolute value can be calculated")
+{
+    REQUIRE(abs(Fraction(3, 2)) == Fraction(3, 2));
+    REQUIRE(abs(Fraction(-3, 2)) == Fraction(3, 2));
+    REQUIRE(abs(Fraction(0)) == 0);
+}
+
 TEST_CASE("A fraction can be promoted", "[Fraction]")
 {
     REQUIRE(+Fraction(7, 10) == Fraction(7, 10));

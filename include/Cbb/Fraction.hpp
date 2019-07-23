@@ -80,6 +80,8 @@ constexpr long long floor(const Fraction& fraction) noexcept;
 constexpr long long trunc(const Fraction& fraction) noexcept;
 constexpr long long round(const Fraction& fraction) noexcept;
 
+constexpr Fraction abs(const Fraction& fraction) noexcept;
+
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept;
 
 constexpr bool isPositive(const Fraction& fraction) noexcept;
@@ -340,6 +342,11 @@ constexpr long long round(const Fraction& fraction) noexcept
     const auto floored = floor(fraction);
 
     return (fraction - floored < Fraction(1, 2)) ? floored : floored + 1;
+}
+
+constexpr Fraction abs(const Fraction& fraction) noexcept
+{
+    return isPositive(fraction) ? fraction : -fraction;
 }
 
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept
