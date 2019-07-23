@@ -202,9 +202,7 @@ TEST_CASE("A fraction's reciprocal can be calculated", "[Fraction]")
     REQUIRE(reciprocalOf(Fraction(4, 19)) == Fraction(19, 4));
 }
 
-TEST_CASE("The \"unit\" of a fraction is 1 over its denominator", "[Fraction]")
-{
-}
+TEST_CASE("The \"unit\" of a fraction is 1 over its denominator", "[Fraction]") {}
 
 TEST_CASE("A fraction can be converted to a decimal", "[Fraction]")
 {
@@ -216,6 +214,46 @@ TEST_CASE("A fractional power of two can be computed", "[Fraction]")
     REQUIRE(fractionPow2(7) == 128);
     REQUIRE(fractionPow2(0) == 1);
     REQUIRE(fractionPow2(-3) == Fraction(1, 8));
+}
+
+TEST_CASE("A fraction can be ceilinged")
+{
+    REQUIRE(ceil(Fraction(7, 3)) == 3);
+    REQUIRE(ceil(Fraction(8, 3)) == 3);
+    REQUIRE(ceil(Fraction(2)) == 2);
+    REQUIRE(ceil(Fraction(-7, 3)) == -2);
+    REQUIRE(ceil(Fraction(-8, 3)) == -2);
+    REQUIRE(ceil(Fraction(-2)) == -2);
+}
+
+TEST_CASE("A fraction can be floored")
+{
+    REQUIRE(floor(Fraction(7, 3)) == 2);
+    REQUIRE(floor(Fraction(8, 3)) == 2);
+    REQUIRE(floor(Fraction(2)) == 2);
+    REQUIRE(floor(Fraction(-7, 3)) == -3);
+    REQUIRE(floor(Fraction(-8, 3)) == -3);
+    REQUIRE(floor(Fraction(-2)) == -2);
+}
+
+TEST_CASE("A fraction can be truncated")
+{
+    REQUIRE(trunc(Fraction(7, 3)) == 2);
+    REQUIRE(trunc(Fraction(8, 3)) == 2);
+    REQUIRE(trunc(Fraction(2)) == 2);
+    REQUIRE(trunc(Fraction(-7, 3)) == -2);
+    REQUIRE(trunc(Fraction(-8, 3)) == -2);
+    REQUIRE(trunc(Fraction(-2)) == -2);
+}
+
+TEST_CASE("A fraction can be rounded")
+{
+    REQUIRE(round(Fraction(7, 3)) == 2);
+    REQUIRE(round(Fraction(8, 3)) == 3);
+    REQUIRE(round(Fraction(2)) == 2);
+    REQUIRE(round(Fraction(-7, 3)) == -2);
+    REQUIRE(round(Fraction(-8, 3)) == -3);
+    REQUIRE(round(Fraction(-2)) == -2);
 }
 
 TEST_CASE("A fraction can be promoted", "[Fraction]")
@@ -379,7 +417,7 @@ TEST_CASE("A fraction can be serialized", "[Fraction]")
 
 TEST_CASE("A fraction can be deserialized", "[Fraction]")
 {
-    std::istringstream stream{" -5 / 7 "};
+    std::istringstream stream {" -5 / 7 "};
 
     Fraction f;
     stream >> f;

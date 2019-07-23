@@ -75,6 +75,11 @@ constexpr long double toDecimal(const Fraction& fraction) noexcept;
 
 constexpr Fraction fractionPow2(int exponent) noexcept;
 
+constexpr long long ceil(const Fraction& fraction) noexcept;
+constexpr long long floor(const Fraction& fraction) noexcept;
+constexpr long long trunc(const Fraction& fraction) noexcept;
+constexpr long long round(const Fraction& fraction) noexcept;
+
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept;
 
 constexpr bool isPositive(const Fraction& fraction) noexcept;
@@ -303,6 +308,38 @@ constexpr Fraction fractionPow2(const int exponent) noexcept
 {
     return (exponent >= 0) ? Fraction(static_cast<long long>(1ULL << exponent))
                            : Fraction(1, static_cast<long long>(1ULL << -exponent));
+}
+
+constexpr long long ceil(const Fraction& fraction) noexcept
+{
+    const auto truncated = trunc(fraction);
+
+    if (isInteger(fraction))
+        return truncated;
+
+    return (truncated >= 0) ? truncated + 1 : truncated;
+}
+
+constexpr long long floor(const Fraction& fraction) noexcept
+{
+    const auto truncated = trunc(fraction);
+
+    if (isInteger(fraction))
+        return truncated;
+
+    return (truncated >= 0) ? truncated : truncated - 1;
+}
+
+constexpr long long trunc(const Fraction& fraction) noexcept
+{
+    return fraction.num() / fraction.den();
+}
+
+constexpr long long round(const Fraction& fraction) noexcept
+{
+    const auto floored = floor(fraction);
+
+    return (fraction - floored < Fraction(1, 2)) ? floored : floored + 1;
 }
 
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept
