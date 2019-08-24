@@ -159,18 +159,15 @@ SCENARIO("Time signatures can be added and removed from metric structures")
             {
                 const auto ok = metricStructure.eraseTimeSignatureChangeAt(12);
 
-                THEN("the operation succeeds")
+                THEN("the operation succeeds") { REQUIRE(ok); }
+
+                AND_THEN("there is a single time signature change to 4/4 at bar 0")
                 {
-                    REQUIRE(ok);
+                    const auto timeSigChanges = metricStructure.timeSignatureChanges();
 
-                    AND_THEN("there is a single time signature change to 4/4 at bar 0")
-                    {
-                        const auto timeSigChanges = metricStructure.timeSignatureChanges();
-
-                        REQUIRE(timeSigChanges.size() == 1);
-                        REQUIRE(timeSigChanges[0].first == 0);
-                        REQUIRE(timeSigChanges[0].second == TimeSignature(4, 4));
-                    }
+                    REQUIRE(timeSigChanges.size() == 1);
+                    REQUIRE(timeSigChanges[0].first == 0);
+                    REQUIRE(timeSigChanges[0].second == TimeSignature(4, 4));
                 }
             }
         }
@@ -232,18 +229,15 @@ SCENARIO("BPM changes can be added and removed from metric structures")
             {
                 const auto ok = metricStructure.eraseBpmChangeAt({12, {3, 8}});
 
-                THEN("the operation succeeds")
+                THEN("the operation succeeds") { REQUIRE(ok); }
+
+                AND_THEN("there is a single BPM change to 120 at position 0")
                 {
-                    REQUIRE(ok);
+                    const auto bpmChanges = metricStructure.bpmChanges();
 
-                    AND_THEN("there is a single BPM change to 120 at position 0")
-                    {
-                        const auto bpmChanges = metricStructure.bpmChanges();
-
-                        REQUIRE(bpmChanges.size() == 1);
-                        REQUIRE(bpmChanges[0].first == 0);
-                        REQUIRE(bpmChanges[0].second == 120);
-                    }
+                    REQUIRE(bpmChanges.size() == 1);
+                    REQUIRE(bpmChanges[0].first == 0);
+                    REQUIRE(bpmChanges[0].second == 120);
                 }
             }
         }
@@ -285,7 +279,7 @@ SCENARIO("The time signature at any given position can be found")
             REQUIRE(change.first == 0);
             REQUIRE(change.second == TimeSignature(4, 4));
         }
-
+    
         THEN("the latest time signature for 12 3/4 is 4/4 at 0")
         {
             const auto change = metricStructure.lastestTimeSignatureChange({12, {3, 4}});
@@ -293,7 +287,7 @@ SCENARIO("The time signature at any given position can be found")
             REQUIRE(change.first == 0);
             REQUIRE(change.second == TimeSignature(4, 4));
         }
-
+    
         THEN("the latest time signature for position 13 is 3/4 at 13")
         {
             const auto change = metricStructure.lastestTimeSignatureChange(13);
@@ -301,7 +295,7 @@ SCENARIO("The time signature at any given position can be found")
             REQUIRE(change.first == 13);
             REQUIRE(change.second == TimeSignature(3, 4));
         }
-
+    
         THEN("the latest time signature for 500 11/17 is 3/4 at 13")
         {
             const auto change = metricStructure.lastestTimeSignatureChange({500, {11, 17}});
@@ -326,7 +320,7 @@ SCENARIO("The BPM at any given position can be found")
             REQUIRE(change.first == 0);
             REQUIRE(change.second == 120);
         }
-
+    
         THEN("the latest BPM for position 17 1/14 is 120 at 0")
         {
             const auto change = metricStructure.lastestBpmChange({17, {1, 14}});
@@ -334,7 +328,7 @@ SCENARIO("The BPM at any given position can be found")
             REQUIRE(change.first == 0);
             REQUIRE(change.second == 120);
         }
-
+    
         THEN("the latest BPM for position 17 1/7 is 100 1/3 at 17 1/7")
         {
             const auto change = metricStructure.lastestBpmChange({17, {1, 7}});
@@ -342,7 +336,7 @@ SCENARIO("The BPM at any given position can be found")
             REQUIRE(change.first == MetricPosition(17, {1, 7}));
             REQUIRE(change.second == 100 + Fraction(1, 3));
         }
-
+    
         THEN("the latest BPM for position 500 11/17 is 100 1/3 at 17 1/7")
         {
             const auto change = metricStructure.lastestBpmChange({500, {11, 17}});
