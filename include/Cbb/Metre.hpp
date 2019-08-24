@@ -66,6 +66,7 @@ public:
     bool eraseBpmChangeAt(const MetricPosition& position);
 
     std::vector<std::pair<BarNumber, TimeSignature>> timeSignatureChanges() const;
+
     std::vector<std::pair<MetricPosition, Fraction>> bpmChanges() const;
 
     std::pair<BarNumber, TimeSignature>
