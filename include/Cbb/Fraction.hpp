@@ -381,7 +381,7 @@ constexpr bool isNegative(const Fraction& fraction) noexcept
 
 constexpr bool isZero(const Fraction& fraction) noexcept
 {
-    return 0 == fraction.numerator() && isDefined(fraction);
+    return isDefined(fraction) && fraction.numerator() == 0;
 }
 
 constexpr bool isInteger(const Fraction& fraction) noexcept
@@ -396,7 +396,7 @@ constexpr bool isUnitFraction(const Fraction& fraction) noexcept
 
 constexpr bool isDefined(const Fraction& fraction) noexcept
 {
-    return 0 != fraction.denominator();
+    return fraction.denominator() != 0;
 }
 
 constexpr bool isUndefined(const Fraction& fraction) noexcept
