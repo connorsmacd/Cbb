@@ -127,16 +127,16 @@ TEST_CASE(
 
 SCENARIO("Time signatures can be added and removed from metric structures")
 {
-    GIVEN("a metric structure with a default time signature of 4/4")
+    GIVEN("a metric structure with a default time signature of 4/4 and initial bar 1")
     {
-        auto metricStructure = MetricStructure(TimeSignature(4, 4), 120);
+        auto metricStructure = MetricStructure(TimeSignature(4, 4), 120, 1);
 
         THEN("there is a single time signature change to 4/4 at bar 0")
         {
             const auto timeSigChanges = metricStructure.timeSignatureChanges();
 
             REQUIRE(timeSigChanges.size() == 1);
-            REQUIRE(timeSigChanges[0].first == 0);
+            REQUIRE(timeSigChanges[0].first == 1);
             REQUIRE(timeSigChanges[0].second == TimeSignature(4, 4));
         }
 
@@ -144,12 +144,12 @@ SCENARIO("Time signatures can be added and removed from metric structures")
         {
             metricStructure.addTimeSignatureChange(12, TimeSignature(3, 4));
 
-            THEN("there are time signature changes of 4/4 at bar 0 and 3/4 at bar 12")
+            THEN("there are time signature changes of 4/4 at bar 1 and 3/4 at bar 12")
             {
                 const auto timeSigChanges = metricStructure.timeSignatureChanges();
 
                 REQUIRE(timeSigChanges.size() == 2);
-                REQUIRE(timeSigChanges[0].first == 0);
+                REQUIRE(timeSigChanges[0].first == 1);
                 REQUIRE(timeSigChanges[0].second == TimeSignature(4, 4));
                 REQUIRE(timeSigChanges[1].first == 12);
                 REQUIRE(timeSigChanges[1].second == TimeSignature(3, 4));
@@ -161,12 +161,12 @@ SCENARIO("Time signatures can be added and removed from metric structures")
 
                 THEN("the operation succeeds") { REQUIRE(ok); }
 
-                AND_THEN("there is a single time signature change to 4/4 at bar 0")
+                AND_THEN("there is a single time signature change to 4/4 at bar 1")
                 {
                     const auto timeSigChanges = metricStructure.timeSignatureChanges();
 
                     REQUIRE(timeSigChanges.size() == 1);
-                    REQUIRE(timeSigChanges[0].first == 0);
+                    REQUIRE(timeSigChanges[0].first == 1);
                     REQUIRE(timeSigChanges[0].second == TimeSignature(4, 4));
                 }
             }
@@ -181,7 +181,7 @@ SCENARIO("Time signatures can be added and removed from metric structures")
 
         WHEN("a time signature change is erased at bar 0 where the initial time signature is")
         {
-            const auto ok = metricStructure.eraseTimeSignatureChangeAt(0);
+            const auto ok = metricStructure.eraseTimeSignatureChangeAt(1);
 
             THEN("the operation fails") { REQUIRE_FALSE(ok); }
         }
@@ -199,14 +199,14 @@ SCENARIO("BPM changes can be added and removed from metric structures")
 {
     GIVEN("a metric structure with a default BPM of 120")
     {
-        auto metricStructure = MetricStructure(TimeSignature(4, 4), 120);
+        auto metricStructure = MetricStructure(TimeSignature(4, 4), 120, -1);
 
-        THEN("there is a BPM change to 120 at 0.0")
+        THEN("there is a BPM change to 120 at -1")
         {
             const auto bpmChanges = metricStructure.bpmChanges();
 
             REQUIRE(bpmChanges.size() == 1);
-            REQUIRE(bpmChanges[0].first == 0);
+            REQUIRE(bpmChanges[0].first == -1);
             REQUIRE(bpmChanges[0].second == 120);
         }
 
@@ -214,12 +214,12 @@ SCENARIO("BPM changes can be added and removed from metric structures")
         {
             metricStructure.addBpmChange({12, {3, 8}}, MixedFraction(150, {1, 2}));
 
-            THEN("there are BPM changes of 120 at position 0 and 150 1/2 at positon 12 3/8")
+            THEN("there are BPM changes of 120 at position -1 and 150 1/2 at positon 12 3/8")
             {
                 const auto bpmChanges = metricStructure.bpmChanges();
 
                 REQUIRE(bpmChanges.size() == 2);
-                REQUIRE(bpmChanges[0].first == 0);
+                REQUIRE(bpmChanges[0].first == -1);
                 REQUIRE(bpmChanges[0].second == 120);
                 REQUIRE(bpmChanges[1].first == MetricPosition(12, {3, 8}));
                 REQUIRE(bpmChanges[1].second == MixedFraction(150, {1, 2}));
@@ -231,12 +231,12 @@ SCENARIO("BPM changes can be added and removed from metric structures")
 
                 THEN("the operation succeeds") { REQUIRE(ok); }
 
-                AND_THEN("there is a single BPM change to 120 at position 0")
+                AND_THEN("there is a single BPM change to 120 at position -1")
                 {
                     const auto bpmChanges = metricStructure.bpmChanges();
 
                     REQUIRE(bpmChanges.size() == 1);
-                    REQUIRE(bpmChanges[0].first == 0);
+                    REQUIRE(bpmChanges[0].first == -1);
                     REQUIRE(bpmChanges[0].second == 120);
                 }
             }
@@ -251,7 +251,7 @@ SCENARIO("BPM changes can be added and removed from metric structures")
 
         WHEN("a BPM change is erased at position 0 where the initial BPM change is")
         {
-            const auto ok = metricStructure.eraseBpmChangeAt(0);
+            const auto ok = metricStructure.eraseBpmChangeAt(-1);
 
             THEN("the operation fails") { REQUIRE_FALSE(ok); }
         }

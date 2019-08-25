@@ -7,11 +7,13 @@ namespace Cbb {
 
 
 MetricStructure::MetricStructure(const TimeSignature& defaultTimeSignature,
-                                 const TempoBpm& defaultBpm) :
+                                 const TempoBpm& defaultBpm,
+                                 const BarNumber initialBar) :
     defaultTimeSignature_ {defaultTimeSignature},
     defaultBpm_ {defaultBpm},
-    timeSignatureChanges_ {{0, defaultTimeSignature}},
-    bpmChanges_ {{0, defaultBpm}}
+    initialBar_ {initialBar},
+    timeSignatureChanges_ {{initialBar, defaultTimeSignature}},
+    bpmChanges_ {{initialBar, defaultBpm}}
 {
 }
 
@@ -28,7 +30,7 @@ void MetricStructure::addBpmChange(const MetricPosition& position, const TempoBp
 
 bool MetricStructure::eraseTimeSignatureChangeAt(const BarNumber bar)
 {
-    if (bar <= 0)
+    if (bar <= initialBar_)
         return false;
 
     const auto found = timeSignatureChanges_.find(bar);
@@ -43,7 +45,7 @@ bool MetricStructure::eraseTimeSignatureChangeAt(const BarNumber bar)
 
 bool MetricStructure::eraseBpmChangeAt(const MetricPosition& position)
 {
-    if (position <= 0)
+    if (position <= initialBar_)
         return false;
 
     const auto found = bpmChanges_.find(position);

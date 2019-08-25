@@ -57,7 +57,9 @@ using TempoBpm = Fraction;
 class MetricStructure final {
 
 public:
-    MetricStructure(const TimeSignature& defaultTimeSignature, const TempoBpm& defaultBpm);
+    MetricStructure(const TimeSignature& defaultTimeSignature,
+                    const TempoBpm& defaultBpm,
+                    BarNumber initialBar = 0);
 
     void addTimeSignatureChange(BarNumber bar, const TimeSignature& timeSignature);
 
@@ -79,6 +81,7 @@ public:
 private:
     TimeSignature defaultTimeSignature_;
     TempoBpm defaultBpm_;
+    BarNumber initialBar_;
 
     std::map<BarNumber, TimeSignature, std::greater<BarNumber>> timeSignatureChanges_;
     std::map<MetricPosition, TempoBpm, std::greater<MetricPosition>> bpmChanges_;
