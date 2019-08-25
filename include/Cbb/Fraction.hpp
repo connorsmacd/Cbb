@@ -110,7 +110,8 @@ public:
     constexpr MixedFraction(long long wholePart, const Fraction& fractionalPart) noexcept;
     constexpr MixedFraction(const Fraction& fraction) noexcept;
 
-    constexpr operator Fraction() const noexcept;
+    constexpr Fraction asFraction() const noexcept;
+    constexpr operator Fraction() const noexcept { return asFraction(); }
 
     long long wholePart() const noexcept { return wholePart_; }
     Fraction fractionalPart() const noexcept { return fractionalPart_; }
@@ -420,7 +421,7 @@ constexpr MixedFraction::MixedFraction(const Fraction& fraction) noexcept :
 {
 }
 
-constexpr MixedFraction::operator Fraction() const noexcept
+constexpr Fraction MixedFraction::asFraction() const noexcept
 {
     return combine(wholePart_, fractionalPart_);
 }
