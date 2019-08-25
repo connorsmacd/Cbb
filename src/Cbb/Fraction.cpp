@@ -8,15 +8,16 @@ namespace Cbb {
 
 std::ostream& operator<<(std::ostream& stream, const Fraction& fraction) noexcept
 {
-    stream << fraction.n << '/' << fraction.d;
+    stream << fraction.numerator_ << '/' << fraction.denominator_;
+
     return stream;
 }
 
 std::istream& operator>>(std::istream& stream, Fraction& fraction) noexcept
 {
-    stream >> fraction.n;
+    stream >> fraction.numerator_;
     stream.ignore(std::numeric_limits<std::streamsize>::max(), '/');
-    stream >> fraction.d;
+    stream >> fraction.denominator_;
 
     return stream;
 }

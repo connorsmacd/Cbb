@@ -18,10 +18,8 @@ public:
     constexpr Fraction() = default;
     constexpr Fraction(long long numerator, long long denominator = 1) noexcept;
 
-    constexpr long long num() const noexcept { return n; }
-    constexpr long long den() const noexcept { return d; }
-    constexpr long long numerator() const noexcept { return num(); }
-    constexpr long long denominator() const noexcept { return den(); }
+    constexpr long long numerator() const noexcept { return numerator_; }
+    constexpr long long denominator() const noexcept { return denominator_; }
 
     constexpr Fraction withNumerator(long long numerator) const noexcept;
     constexpr Fraction withDenominator(long long denominator) const noexcept;
@@ -32,7 +30,7 @@ public:
     friend std::istream& operator>>(std::istream& stream, Fraction& fraction) noexcept;
 
 private:
-    long long n = 0, d = 1;
+    long long numerator_ = 0, denominator_ = 1;
 };
 
 constexpr Fraction operator+(const Fraction& fraction) noexcept;
@@ -60,8 +58,6 @@ constexpr bool operator>=(const Fraction& left, const Fraction& right) noexcept;
 constexpr bool symbolicallyEqual(const Fraction& left, const Fraction& right) noexcept;
 constexpr bool notSymbolicallyEqual(const Fraction& left, const Fraction& right) noexcept;
 
-constexpr long long num(const Fraction& fraction) noexcept;
-constexpr long long den(const Fraction& fraction) noexcept;
 constexpr long long numerator(const Fraction& fraction) noexcept;
 constexpr long long denominator(const Fraction& fraction) noexcept;
 
@@ -131,19 +127,19 @@ private:
 
 
 constexpr Fraction::Fraction(const long long numerator, const long long denominator) noexcept :
-    n {numerator},
-    d {denominator}
+    numerator_ {numerator},
+    denominator_ {denominator}
 {
 }
 
 constexpr Fraction Fraction::withNumerator(const long long numerator) const noexcept
 {
-    return {numerator, d};
+    return {numerator, denominator_};
 }
 
 constexpr Fraction Fraction::withDenominator(const long long denominator) const noexcept
 {
-    return {n, denominator};
+    return {numerator_, denominator};
 }
 
 constexpr Fraction Fraction::withSwitchedSignPosition() const noexcept
@@ -151,7 +147,7 @@ constexpr Fraction Fraction::withSwitchedSignPosition() const noexcept
     if (isPositive(*this))
         return *this;
 
-    return {-n, -d};
+    return {-numerator_, -denominator_};
 }
 
 constexpr Fraction Fraction::withMinimalNegativeSigns() const noexcept
@@ -159,7 +155,7 @@ constexpr Fraction Fraction::withMinimalNegativeSigns() const noexcept
     if (numNegativeSigns(*this) < 2)
         return *this;
 
-    return {-n, -d};
+    return {-numerator_, -denominator_};
 }
 
 constexpr Fraction operator+(const Fraction& fraction) noexcept
@@ -169,15 +165,16 @@ constexpr Fraction operator+(const Fraction& fraction) noexcept
 
 constexpr Fraction operator-(const Fraction& fraction) noexcept
 {
-    return {-fraction.num(), fraction.den()};
+    return {-fraction.numerator(), fraction.denominator()};
 }
 
 constexpr Fraction operator+(const Fraction& augend, const Fraction& addend) noexcept
 {
-    if (augend.den() == addend.den())
-        return {augend.num() + addend.num(), augend.den()};
+    if (augend.denominator() == addend.denominator())
+        return {augend.numerator() + addend.numerator(), augend.denominator()};
 
-    return {augend.num() * addend.den() + addend.num() * augend.den(), augend.den() * addend.den()};
+    return {augend.numerator() * addend.denominator() + addend.numerator() * augend.denominator(),
+            augend.denominator() * addend.denominator()};
 }
 
 constexpr Fraction operator-(const Fraction& minuend, const Fraction& subtrahend) noexcept
@@ -187,7 +184,8 @@ constexpr Fraction operator-(const Fraction& minuend, const Fraction& subtrahend
 
 constexpr Fraction operator*(const Fraction& multiplicand, const Fraction& multiplier) noexcept
 {
-    return {multiplicand.num() * multiplier.num(), multiplicand.den() * multiplier.den()};
+    return {multiplicand.numerator() * multiplier.numerator(),
+            multiplicand.denominator() * multiplier.denominator()};
 }
 
 constexpr Fraction operator/(const Fraction& dividend, const Fraction& divisor) noexcept
@@ -197,11 +195,12 @@ constexpr Fraction operator/(const Fraction& dividend, const Fraction& divisor) 
 
 constexpr Fraction operator%(const Fraction& dividend, const Fraction& divisor) noexcept
 {
-    if (dividend.den() == divisor.den())
-        return {dividend.num() % divisor.num(), dividend.den()};
+    if (dividend.denominator() == divisor.denominator())
+        return {dividend.numerator() % divisor.numerator(), dividend.denominator()};
 
-    return {(dividend.num() * divisor.den()) % (divisor.num() * dividend.den()),
-            dividend.den() * divisor.den()};
+    return {(dividend.numerator() * divisor.denominator())
+                % (divisor.numerator() * dividend.denominator()),
+            dividend.denominator() * divisor.denominator()};
 }
 
 constexpr Fraction& operator+=(Fraction& augend, const Fraction& addend) noexcept
@@ -234,7 +233,7 @@ constexpr bool operator==(const Fraction& left, const Fraction& right) noexcept
     if (isUndefined(left) || isUndefined(right))
         return false;
 
-    return left.num() * right.den() == right.num() * left.den();
+    return left.numerator() * right.denominator() == right.numerator() * left.denominator();
 }
 
 constexpr bool operator!=(const Fraction& left, const Fraction& right) noexcept
@@ -247,7 +246,7 @@ constexpr bool operator<(const Fraction& left, const Fraction& right) noexcept
     if (isUndefined(left) || isUndefined(right))
         return false;
 
-    return left.num() * right.den() < right.num() * left.den();
+    return left.numerator() * right.denominator() < right.numerator() * left.denominator();
 }
 
 constexpr bool operator<=(const Fraction& left, const Fraction& right) noexcept
@@ -255,7 +254,7 @@ constexpr bool operator<=(const Fraction& left, const Fraction& right) noexcept
     if (isUndefined(left) || isUndefined(right))
         return false;
 
-    return left.num() * right.den() <= right.num() * left.den();
+    return left.numerator() * right.denominator() <= right.numerator() * left.denominator();
 }
 
 constexpr bool operator>(const Fraction& left, const Fraction& right) noexcept
@@ -263,7 +262,7 @@ constexpr bool operator>(const Fraction& left, const Fraction& right) noexcept
     if (isUndefined(left) || isUndefined(right))
         return false;
 
-    return left.num() * right.den() > right.num() * left.den();
+    return left.numerator() * right.denominator() > right.numerator() * left.denominator();
 }
 
 constexpr bool operator>=(const Fraction& left, const Fraction& right) noexcept
@@ -271,12 +270,12 @@ constexpr bool operator>=(const Fraction& left, const Fraction& right) noexcept
     if (isUndefined(left) || isUndefined(right))
         return false;
 
-    return left.num() * right.den() >= right.num() * left.den();
+    return left.numerator() * right.denominator() >= right.numerator() * left.denominator();
 }
 
 constexpr bool symbolicallyEqual(const Fraction& left, const Fraction& right) noexcept
 {
-    return left.num() == right.num() && left.den() == right.den();
+    return left.numerator() == right.numerator() && left.denominator() == right.denominator();
 }
 
 constexpr bool notSymbolicallyEqual(const Fraction& left, const Fraction& right) noexcept
@@ -284,46 +283,39 @@ constexpr bool notSymbolicallyEqual(const Fraction& left, const Fraction& right)
     return !symbolicallyEqual(left, right);
 }
 
-constexpr long long num(const Fraction& fraction) noexcept
-{
-    return fraction.num();
-}
-
-constexpr long long den(const Fraction& fraction) noexcept
-{
-    return fraction.den();
-}
-
 constexpr long long numerator(const Fraction& fraction) noexcept
 {
-    return num(fraction);
+    return fraction.numerator();
 }
 
 constexpr long long denominator(const Fraction& fraction) noexcept
 {
-    return den(fraction);
+    return fraction.denominator();
 }
 
 constexpr Fraction reduce(const Fraction& fraction) noexcept
 {
-    const auto gcd = std::gcd(fraction.num(), fraction.den());
+    const auto gcd = std::gcd(fraction.numerator(), fraction.denominator());
 
-    return Fraction(fraction.num() / gcd, fraction.den() / gcd).withMinimalNegativeSigns();
+    return Fraction(fraction.numerator() / gcd, fraction.denominator() / gcd)
+        .withMinimalNegativeSigns();
 }
 
 constexpr Fraction reciprocalOf(const Fraction& fraction) noexcept
 {
-    return {fraction.den(), fraction.num()};
+    return {fraction.denominator(), fraction.numerator()};
 }
 
 constexpr UnitFraction unitOf(const Fraction& fraction) noexcept
 {
-    return isPositive(fraction) ? std::abs(fraction.den()) : -std::abs(fraction.den());
+    return isPositive(fraction) ? std::abs(fraction.denominator())
+                                : -std::abs(fraction.denominator());
 }
 
 constexpr long double toDecimal(const Fraction& fraction) noexcept
 {
-    return static_cast<long double>(fraction.num()) / static_cast<long double>(fraction.den());
+    return static_cast<long double>(fraction.numerator())
+           / static_cast<long double>(fraction.denominator());
 }
 
 constexpr Fraction fractionPow2(const int exponent) noexcept
@@ -354,7 +346,7 @@ constexpr long long floor(const Fraction& fraction) noexcept
 
 constexpr long long trunc(const Fraction& fraction) noexcept
 {
-    return fraction.num() / fraction.den();
+    return fraction.numerator() / fraction.denominator();
 }
 
 constexpr long long round(const Fraction& fraction) noexcept
@@ -371,27 +363,29 @@ constexpr Fraction abs(const Fraction& fraction) noexcept
 
 constexpr std::size_t numNegativeSigns(const Fraction& fraction) noexcept
 {
-    return ((fraction.num() < 0) ? 1 : 0) + ((fraction.den() < 0) ? 1 : 0);
+    return ((fraction.numerator() < 0) ? 1 : 0) + ((fraction.denominator() < 0) ? 1 : 0);
 }
 
 constexpr bool isPositive(const Fraction& fraction) noexcept
 {
-    return (fraction.num() > 0 && fraction.den() > 0) || (fraction.num() < 0 && fraction.den() < 0);
+    return (fraction.numerator() > 0 && fraction.denominator() > 0)
+           || (fraction.numerator() < 0 && fraction.denominator() < 0);
 }
 
 constexpr bool isNegative(const Fraction& fraction) noexcept
 {
-    return (fraction.num() > 0 && fraction.den() < 0) || (fraction.num() < 0 && fraction.den() > 0);
+    return (fraction.numerator() > 0 && fraction.denominator() < 0)
+           || (fraction.numerator() < 0 && fraction.denominator() > 0);
 }
 
 constexpr bool isZero(const Fraction& fraction) noexcept
 {
-    return 0 == fraction.num() && isDefined(fraction);
+    return 0 == fraction.numerator() && isDefined(fraction);
 }
 
 constexpr bool isInteger(const Fraction& fraction) noexcept
 {
-    return isDefined(fraction) && fraction.num() % fraction.den() == 0;
+    return isDefined(fraction) && fraction.numerator() % fraction.denominator() == 0;
 }
 
 constexpr bool isUnitFraction(const Fraction& fraction) noexcept
@@ -401,7 +395,7 @@ constexpr bool isUnitFraction(const Fraction& fraction) noexcept
 
 constexpr bool isDefined(const Fraction& fraction) noexcept
 {
-    return 0 != fraction.den();
+    return 0 != fraction.denominator();
 }
 
 constexpr bool isUndefined(const Fraction& fraction) noexcept

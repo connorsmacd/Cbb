@@ -13,16 +13,16 @@ TEST_CASE("A fraction is default constructable to 0/1", "[Fraction]")
 {
     constexpr auto f = Fraction();
 
-    REQUIRE(f.num() == 0);
-    REQUIRE(f.den() == 1);
+    REQUIRE(f.numerator() == 0);
+    REQUIRE(f.denominator() == 1);
 }
 
 TEST_CASE("A fraction can be constructed from a numerator and denominator", "[Fraction]")
 {
     constexpr auto f1 = Fraction(3, 4);
 
-    REQUIRE(f1.num() == 3);
-    REQUIRE(f1.den() == 4);
+    REQUIRE(f1.numerator() == 3);
+    REQUIRE(f1.denominator() == 4);
 }
 
 TEST_CASE("A fraction is copy constructable", "[Fraction]")
@@ -30,32 +30,32 @@ TEST_CASE("A fraction is copy constructable", "[Fraction]")
     constexpr auto f = Fraction(-5, 6);
     constexpr auto c = Fraction(f);
 
-    REQUIRE(c.num() == -5);
-    REQUIRE(c.den() == 6);
+    REQUIRE(c.numerator() == -5);
+    REQUIRE(c.denominator() == 6);
 }
 
 TEST_CASE("A fraction can be constructed from just a numerator", "[Fraction]")
 {
     constexpr auto f = Fraction(5);
 
-    REQUIRE(f.num() == 5);
-    REQUIRE(f.den() == 1);
+    REQUIRE(f.numerator() == 5);
+    REQUIRE(f.denominator() == 1);
 }
 
 TEST_CASE("A fraction can be implicitly converted from a numerator and denominator", "[Fraction]")
 {
     constexpr Fraction f1 = {3, 4};
 
-    REQUIRE(f1.num() == 3);
-    REQUIRE(f1.den() == 4);
+    REQUIRE(f1.numerator() == 3);
+    REQUIRE(f1.denominator() == 4);
 }
 
 TEST_CASE("A fraction can be implicitly converted from an integer", "[Fraction]")
 {
     constexpr Fraction f = 5;
 
-    REQUIRE(f.num() == 5);
-    REQUIRE(f.den() == 1);
+    REQUIRE(f.numerator() == 5);
+    REQUIRE(f.denominator() == 1);
 }
 
 TEST_CASE("Symbolically identical fractions are equal", "[Fraction]")
