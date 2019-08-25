@@ -52,14 +52,16 @@ constexpr bool operator>(const MetricPosition& left, const MetricPosition& right
 constexpr bool operator>=(const MetricPosition& left, const MetricPosition& right) noexcept;
 
 
+using TempoBpm = Fraction;
+
 class MetricStructure final {
 
 public:
-    MetricStructure(const TimeSignature& defaultTimeSignature, const Fraction& defaultBpm);
+    MetricStructure(const TimeSignature& defaultTimeSignature, const TempoBpm& defaultBpm);
 
     void addTimeSignatureChange(BarNumber bar, const TimeSignature& timeSignature);
 
-    void addBpmChange(const MetricPosition& position, const Fraction& bpm);
+    void addBpmChange(const MetricPosition& position, const TempoBpm& bpm);
 
     bool eraseTimeSignatureChangeAt(BarNumber bar);
 
@@ -67,19 +69,19 @@ public:
 
     std::vector<std::pair<BarNumber, TimeSignature>> timeSignatureChanges() const;
 
-    std::vector<std::pair<MetricPosition, Fraction>> bpmChanges() const;
+    std::vector<std::pair<MetricPosition, TempoBpm>> bpmChanges() const;
 
     std::pair<BarNumber, TimeSignature>
     lastestTimeSignatureChange(const MetricPosition& position) const;
 
-    std::pair<MetricPosition, Fraction> lastestBpmChange(const MetricPosition& position) const;
+    std::pair<MetricPosition, TempoBpm> lastestBpmChange(const MetricPosition& position) const;
 
 private:
     TimeSignature defaultTimeSignature_;
-    Fraction defaultBpm_;
+    TempoBpm defaultBpm_;
 
     std::map<BarNumber, TimeSignature, std::greater<BarNumber>> timeSignatureChanges_;
-    std::map<MetricPosition, Fraction, std::greater<MetricPosition>> bpmChanges_;
+    std::map<MetricPosition, TempoBpm, std::greater<MetricPosition>> bpmChanges_;
 };
 
 

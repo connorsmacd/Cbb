@@ -7,7 +7,7 @@ namespace Cbb {
 
 
 MetricStructure::MetricStructure(const TimeSignature& defaultTimeSignature,
-                                 const Fraction& defaultBpm) :
+                                 const TempoBpm& defaultBpm) :
     defaultTimeSignature_ {defaultTimeSignature},
     defaultBpm_ {defaultBpm},
     timeSignatureChanges_ {{0, defaultTimeSignature}},
@@ -21,7 +21,7 @@ void MetricStructure::addTimeSignatureChange(const BarNumber bar,
     timeSignatureChanges_[bar] = timeSignature;
 }
 
-void MetricStructure::addBpmChange(const MetricPosition& position, const Fraction& bpm)
+void MetricStructure::addBpmChange(const MetricPosition& position, const TempoBpm& bpm)
 {
     bpmChanges_[position] = bpm;
 }
@@ -62,9 +62,9 @@ std::vector<std::pair<BarNumber, TimeSignature>> MetricStructure::timeSignatureC
                                                             timeSignatureChanges_.rend());
 }
 
-std::vector<std::pair<MetricPosition, Fraction>> MetricStructure::bpmChanges() const
+std::vector<std::pair<MetricPosition, TempoBpm>> MetricStructure::bpmChanges() const
 {
-    return std::vector<std::pair<MetricPosition, Fraction>>(bpmChanges_.rbegin(),
+    return std::vector<std::pair<MetricPosition, TempoBpm>>(bpmChanges_.rbegin(),
                                                             bpmChanges_.rend());
 }
 
@@ -74,7 +74,7 @@ MetricStructure::lastestTimeSignatureChange(const MetricPosition& position) cons
     return *timeSignatureChanges_.lower_bound(position.bar);
 }
 
-std::pair<MetricPosition, Fraction>
+std::pair<MetricPosition, TempoBpm>
 MetricStructure::lastestBpmChange(const MetricPosition& position) const
 {
     return *bpmChanges_.lower_bound(position);
