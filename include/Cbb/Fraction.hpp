@@ -95,11 +95,11 @@ public:
     constexpr UnitFraction() noexcept = default;
     constexpr UnitFraction(long long denominator) noexcept;
 
-    constexpr operator const Fraction&() const noexcept { return fraction_; }
-    constexpr const Fraction& toFraction() const noexcept { return fraction_; }
+    constexpr Fraction asFraction() const noexcept { return {1, denominator_}; }
+    constexpr operator Fraction() const noexcept { return asFraction(); }
 
 private:
-    Fraction fraction_ = 1;
+    long long denominator_ = 1;
 };
 
 
@@ -404,7 +404,7 @@ constexpr bool isUndefined(const Fraction& fraction) noexcept
 }
 
 constexpr UnitFraction::UnitFraction(const long long denominator) noexcept :
-    fraction_ {1, denominator}
+    denominator_ {denominator}
 {
 }
 
