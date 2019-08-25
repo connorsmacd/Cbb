@@ -212,7 +212,7 @@ SCENARIO("BPM changes can be added and removed from metric structures")
 
         WHEN("a BPM change to 150 1/2 is added at position 12 3/8")
         {
-            metricStructure.addBpmChange({12, {3, 8}}, 150 + Fraction(1, 2));
+            metricStructure.addBpmChange({12, {3, 8}}, MixedFraction(150, {1, 2}));
 
             THEN("there are BPM changes of 120 at position 0 and 150 1/2 at positon 12 3/8")
             {
@@ -222,7 +222,7 @@ SCENARIO("BPM changes can be added and removed from metric structures")
                 REQUIRE(bpmChanges[0].first == 0);
                 REQUIRE(bpmChanges[0].second == 120);
                 REQUIRE(bpmChanges[1].first == MetricPosition(12, {3, 8}));
-                REQUIRE(bpmChanges[1].second == 150 + Fraction(1, 2));
+                REQUIRE(bpmChanges[1].second == MixedFraction(150, {1, 2}));
             }
 
             AND_WHEN("a BPM change is erased at bar 12 3/8")
@@ -311,7 +311,7 @@ SCENARIO("The BPM at any given position can be found")
     GIVEN("a metric structure with BPM changes to 120 at 0 and 100 1/3 at 17 1/7")
     {
         auto metricStructure = MetricStructure(TimeSignature(4, 4), 120);
-        metricStructure.addBpmChange({17, {1, 7}}, 100 + Fraction(1, 3));
+        metricStructure.addBpmChange({17, {1, 7}}, MixedFraction(100, {1, 3}));
 
         THEN("the latest BPM for position 0 is 120 at 0")
         {
@@ -334,7 +334,7 @@ SCENARIO("The BPM at any given position can be found")
             const auto change = metricStructure.lastestBpmChange({17, {1, 7}});
 
             REQUIRE(change.first == MetricPosition(17, {1, 7}));
-            REQUIRE(change.second == 100 + Fraction(1, 3));
+            REQUIRE(change.second == MixedFraction(100, {1, 3}));
         }
     
         THEN("the latest BPM for position 500 11/17 is 100 1/3 at 17 1/7")
@@ -342,7 +342,7 @@ SCENARIO("The BPM at any given position can be found")
             const auto change = metricStructure.lastestBpmChange({500, {11, 17}});
 
             REQUIRE(change.first == MetricPosition(17, {1, 7}));
-            REQUIRE(change.second == 100 + Fraction(1, 3));
+            REQUIRE(change.second == MixedFraction(100, {1, 3}));
         }
     }
 }
