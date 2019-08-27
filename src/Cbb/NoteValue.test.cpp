@@ -11,9 +11,9 @@ TEST_CASE("A default-constructed note value is a basic whole note", "[NoteValue]
 {
     constexpr auto n = NoteValue();
 
-    REQUIRE(n.getBase() == wholeNote);
-    REQUIRE(n.getTuplet() == duplet);
-    REQUIRE(n.getNumDots() == 0);
+    REQUIRE(n.base() == wholeNote);
+    REQUIRE(n.tuplet() == duplet);
+    REQUIRE(n.numDots() == 0);
 }
 
 TEST_CASE(
@@ -22,9 +22,9 @@ TEST_CASE(
 {
     constexpr auto n = NoteValue(semiquaver, quintuplet, 4);
 
-    REQUIRE(n.getBase() == semiquaver);
-    REQUIRE(n.getTuplet() == quintuplet);
-    REQUIRE(n.getNumDots() == 4);
+    REQUIRE(n.base() == semiquaver);
+    REQUIRE(n.tuplet() == quintuplet);
+    REQUIRE(n.numDots() == 4);
 }
 
 TEST_CASE("A copy-constructed note value is a symbollicaly identical copy", "[NoteValue]")
@@ -32,9 +32,9 @@ TEST_CASE("A copy-constructed note value is a symbollicaly identical copy", "[No
     constexpr auto n = NoteValue(quaver, nonuplet, 3);
     constexpr auto c = NoteValue(n);
 
-    REQUIRE(c.getBase() == quaver);
-    REQUIRE(c.getTuplet() == nonuplet);
-    REQUIRE(c.getNumDots() == 3);
+    REQUIRE(c.base() == quaver);
+    REQUIRE(c.tuplet() == nonuplet);
+    REQUIRE(c.numDots() == 3);
 }
 
 TEST_CASE("A note value constructed with just a base and a tuplet produces the expected base, "
@@ -43,9 +43,9 @@ TEST_CASE("A note value constructed with just a base and a tuplet produces the e
 {
     constexpr auto n = NoteValue(halfNote, septuplet);
 
-    REQUIRE(n.getBase() == halfNote);
-    REQUIRE(n.getTuplet() == septuplet);
-    REQUIRE(n.getNumDots() == 0);
+    REQUIRE(n.base() == halfNote);
+    REQUIRE(n.tuplet() == septuplet);
+    REQUIRE(n.numDots() == 0);
 }
 
 TEST_CASE("A note value constructed from just a base and dot count produces the expected base and "
@@ -54,9 +54,9 @@ TEST_CASE("A note value constructed from just a base and dot count produces the 
 {
     constexpr auto n = NoteValue(sixtyFourthNote, 2);
 
-    REQUIRE(n.getBase() == sixtyFourthNote);
-    REQUIRE(n.getTuplet() == duplet);
-    REQUIRE(n.getNumDots() == 2);
+    REQUIRE(n.base() == sixtyFourthNote);
+    REQUIRE(n.tuplet() == duplet);
+    REQUIRE(n.numDots() == 2);
 }
 
 TEST_CASE("A note value constructed from just a base produces the expected basic note value",
@@ -64,9 +64,9 @@ TEST_CASE("A note value constructed from just a base produces the expected basic
 {
     constexpr auto n = NoteValue(quarterNote);
 
-    REQUIRE(n.getBase() == quarterNote);
-    REQUIRE(n.getTuplet() == duplet);
-    REQUIRE(n.getNumDots() == 0);
+    REQUIRE(n.base() == quarterNote);
+    REQUIRE(n.tuplet() == duplet);
+    REQUIRE(n.numDots() == 0);
 }
 
 TEST_CASE("A note value constructed from a unit fraction produces a note value with a relative "
@@ -75,9 +75,9 @@ TEST_CASE("A note value constructed from a unit fraction produces a note value w
 {
     constexpr auto n = NoteValue(UnitFraction(36));
 
-    REQUIRE(n.getBase() == eighthNote);
-    REQUIRE(n.getTuplet() == nonuplet);
-    REQUIRE(n.getNumDots() == 0);
+    REQUIRE(n.base() == eighthNote);
+    REQUIRE(n.tuplet() == nonuplet);
+    REQUIRE(n.numDots() == 0);
 }
 
 TEST_CASE("All the common basic note values have the correct relative value", "[NoteValue]")
@@ -179,7 +179,7 @@ TEST_CASE("A default-constructed composite note value is a single whole note", "
 {
     const auto cnv = CompositeNoteValue();
 
-    REQUIRE(cnv.getSize() == 1);
+    REQUIRE(cnv.size() == 1);
     REQUIRE(cnv[0] == wholeNote);
 }
 
@@ -189,7 +189,7 @@ TEST_CASE(
 {
     const auto cnv = CompositeNoteValue(eighthNote);
 
-    REQUIRE(cnv.getSize() == 1);
+    REQUIRE(cnv.size() == 1);
     REQUIRE(cnv[0] == eighthNote);
 }
 
@@ -199,7 +199,7 @@ TEST_CASE("A composite note value constructed with an initializer produces the s
 {
     const auto cnv = CompositeNoteValue({{quarterNote, triplet, 2}, eighthNote});
 
-    REQUIRE(cnv.getSize() == 2);
+    REQUIRE(cnv.size() == 2);
     REQUIRE(cnv[0] == NoteValue(quarterNote, triplet, 2));
     REQUIRE(cnv[1] == eighthNote);
 }

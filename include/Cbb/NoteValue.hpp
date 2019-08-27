@@ -71,9 +71,9 @@ public:
     constexpr NoteValue(Base base, std::size_t numDots) noexcept;
     constexpr NoteValue(const UnitFraction& unitFraction) noexcept;
 
-    constexpr Base getBase() const noexcept { return base_; }
-    constexpr Tuplet getTuplet() const noexcept { return tuplet_; }
-    constexpr std::size_t getNumDots() const noexcept { return numDots_; }
+    constexpr Base base() const noexcept { return base_; }
+    constexpr Tuplet tuplet() const noexcept { return tuplet_; }
+    constexpr std::size_t numDots() const noexcept { return numDots_; }
 
     constexpr Fraction relativeValue() const noexcept;
 
@@ -119,7 +119,7 @@ public:
     const NoteValue& operator[](std::size_t index) const;
     NoteValue& operator[](std::size_t index);
 
-    std::size_t getSize() const noexcept { return values_.size(); }
+    std::size_t size() const noexcept { return values_.size(); }
 
     Fraction relativeValue() const noexcept;
 
