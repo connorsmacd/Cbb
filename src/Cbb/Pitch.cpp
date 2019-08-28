@@ -9,9 +9,9 @@ Pitch::Pitch(const double frequencyHz, const Tuning tuning) noexcept :
 {
 }
 
-double Pitch::getFrequencyHz(const Tuning tuning) const noexcept
+double Pitch::frequencyHz(const Tuning tuning) const noexcept
 {
-    return Midi::noteNumberToFrequencyHz(getNoteNumber(), tuning);
+    return Midi::noteNumberToFrequencyHz(noteNumber(), tuning);
 }
 
 

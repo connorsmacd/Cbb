@@ -55,10 +55,10 @@ public:
     constexpr Pitch& transposeSemitones(int semitones) noexcept;
     constexpr Pitch& transposeOctaves(int octaves) noexcept;
 
-    constexpr int getClass() const noexcept { return class_; }
-    constexpr int getOctave() const noexcept { return octave_; }
-    constexpr Midi::NoteNumber getNoteNumber() const noexcept;
-    double getFrequencyHz(Tuning tuning = A440) const noexcept;
+    constexpr int cLass() const noexcept { return class_; }
+    constexpr int octave() const noexcept { return octave_; }
+    constexpr Midi::NoteNumber noteNumber() const noexcept;
+    double frequencyHz(Tuning tuning = A440) const noexcept;
 
     friend constexpr bool operator==(const Pitch& left, const Pitch& right) noexcept;
     friend constexpr bool operator!=(const Pitch& left, const Pitch& right) noexcept;
@@ -172,7 +172,7 @@ constexpr Pitch& Pitch::transposeOctaves(const int octaves) noexcept
     return *this;
 }
 
-constexpr Midi::NoteNumber Pitch::getNoteNumber() const noexcept
+constexpr Midi::NoteNumber Pitch::noteNumber() const noexcept
 {
     return Midi::NoteNumber(class_ + (octave_ + 1) * 12);
 }
