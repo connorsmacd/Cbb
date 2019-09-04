@@ -125,32 +125,32 @@ TEST_CASE("A pitch can be default constructed to class 0 octave 0", "[Pitch]")
 {
     constexpr auto p = Pitch();
 
-    REQUIRE(p.getClass() == 0);
-    REQUIRE(p.getOctave() == 0);
+    REQUIRE(p.cLass() == 0);
+    REQUIRE(p.octave() == 0);
 }
 
 TEST_CASE("A pitch can be constructed from a pitch class and octave", "[Pitch]")
 {
     constexpr auto p = Pitch(3, 7);
 
-    REQUIRE(p.getClass() == 3);
-    REQUIRE(p.getOctave() == 7);
+    REQUIRE(p.cLass() == 3);
+    REQUIRE(p.octave() == 7);
 }
 
 TEST_CASE("A pitch can be constructed from a pitch label", "[Pitch]")
 {
     constexpr auto p = Pitch(PitchLabel(F, sharp, 2));
 
-    REQUIRE(p.getClass() == 6);
-    REQUIRE(p.getOctave() == 2);
+    REQUIRE(p.cLass() == 6);
+    REQUIRE(p.octave() == 2);
 }
 
 TEST_CASE("A pitch can be constructed from a MIDI note number", "[Pitch]")
 {
     constexpr auto p = Pitch(Midi::Fs5);
 
-    REQUIRE(p.getClass() == 6);
-    REQUIRE(p.getOctave() == 5);
+    REQUIRE(p.cLass() == 6);
+    REQUIRE(p.octave() == 5);
 }
 
 TEST_CASE("A pitch can be constructed from a frequency and tuning", "[Pitch]")
@@ -158,8 +158,8 @@ TEST_CASE("A pitch can be constructed from a frequency and tuning", "[Pitch]")
     // 311.13 Hz if D#4 in A440
     const auto p = Pitch(311.13, A440);
 
-    REQUIRE(p.getClass() == 3);
-    REQUIRE(p.getOctave() == 4);
+    REQUIRE(p.cLass() == 3);
+    REQUIRE(p.octave() == 4);
 }
 
 TEST_CASE("Transposing a pitch by semitones raises the pitch by the specified number of semitones",
@@ -184,12 +184,12 @@ TEST_CASE("Transposing a pitch by octaves raises the pitch by the specified numb
 
 TEST_CASE("A pitch's MIDI note number can be retrieved", "[Pitch]")
 {
-    REQUIRE(Pitch(Midi::As5).getNoteNumber() == Midi::As5);
+    REQUIRE(Pitch(Midi::As5).noteNumber() == Midi::As5);
 }
 
 TEST_CASE("A pitch's frequency can be retrieved", "[Pitch]")
 {
-    REQUIRE(Pitch(261.63, A440).getFrequencyHz() == Approx(261.63).epsilon(0.01));
+    REQUIRE(Pitch(261.63, A440).frequencyHz() == Approx(261.63).epsilon(0.01));
 }
 
 TEST_CASE("Identical pitches are equivalent", "[Pitch]")
