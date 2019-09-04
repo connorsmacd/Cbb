@@ -102,7 +102,6 @@ constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor
 
 
 // Uniformly represents either a single note value or a sequence of tied note values
-// TODO: nested tuplets?
 class CompositeNoteValue final {
 
 public:
