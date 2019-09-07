@@ -374,3 +374,58 @@ TEST_CASE(
 
     REQUIRE(a % b == Fraction(7, 16));
 }
+
+TEST_CASE("Composite note values are iterable", "[NoteValue]")
+{
+    auto v = CompositeNoteValue({wholeNote, halfNote, quarterNote});
+
+    SECTION("Const forward iteration")
+    {
+        auto i = v.cbegin();
+
+        REQUIRE(*i++ == v[0]);
+        REQUIRE(*i++ == v[1]);
+        REQUIRE(*i++ == v[2]);
+        REQUIRE(i == v.cend());
+    }
+
+    SECTION("Non-const forward iteration")
+    {
+        auto i = v.begin();
+
+        *i++ = twoHundredFiftySixthNote;
+        *i++ = thirtySecondNote;
+        *i++ = octupleWholeNote;
+
+        REQUIRE(i == v.end());
+
+        REQUIRE(v[0] == twoHundredFiftySixthNote);
+        REQUIRE(v[1] == thirtySecondNote);
+        REQUIRE(v[2] == octupleWholeNote);
+    }
+
+    SECTION("Const reverse iteration")
+    {
+        auto i = v.crbegin();
+
+        REQUIRE(*i++ == v[2]);
+        REQUIRE(*i++ == v[1]);
+        REQUIRE(*i++ == v[0]);
+        REQUIRE(i == v.crend());
+    }
+
+    SECTION("Non-const reverse iteration")
+    {
+        auto i = v.rbegin();
+
+        *i++ = twoHundredFiftySixthNote;
+        *i++ = thirtySecondNote;
+        *i++ = octupleWholeNote;
+
+        REQUIRE(i == v.rend());
+
+        REQUIRE(v[2] == twoHundredFiftySixthNote);
+        REQUIRE(v[1] == thirtySecondNote);
+        REQUIRE(v[0] == octupleWholeNote);
+    }
+}

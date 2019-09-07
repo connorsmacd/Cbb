@@ -122,7 +122,24 @@ public:
 
     Fraction relativeValue() const noexcept;
 
-    // TODO: make this a range
+    using Iterator = std::vector<NoteValue>::iterator;
+    using ConstIterator = std::vector<NoteValue>::const_iterator;
+    using ReverseIterator = std::vector<NoteValue>::reverse_iterator;
+    using ConstReverseIterator = std::vector<NoteValue>::const_reverse_iterator;
+
+    ConstIterator begin() const noexcept { return values_.begin(); }
+    Iterator begin() noexcept { return values_.begin(); }
+    ConstIterator end() const noexcept { return values_.end(); }
+    Iterator end() noexcept { return values_.end(); }
+    ConstReverseIterator rbegin() const noexcept { return values_.rbegin(); }
+    ReverseIterator rbegin() noexcept { return values_.rbegin(); }
+    ConstReverseIterator rend() const noexcept { return values_.rend(); }
+    ReverseIterator rend() noexcept { return values_.rend(); }
+
+    ConstIterator cbegin() const noexcept { return values_.begin(); }
+    ConstIterator cend() const noexcept { return values_.end(); }
+    ConstReverseIterator crbegin() const noexcept { return values_.rbegin(); }
+    ConstReverseIterator crend() const noexcept { return values_.rend(); }
 
 private:
     std::vector<NoteValue> values_ = {wholeNote};
