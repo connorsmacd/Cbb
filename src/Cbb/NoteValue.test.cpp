@@ -215,6 +215,17 @@ TEST_CASE("A composite note value's relative value is the sum of its continuent 
     REQUIRE(relativeValue(c) == relativeValue(a) + relativeValue(b));
 }
 
+TEST_CASE("A composite note value can be queried to determin whether or not it is a single note "
+          "value or tied note values",
+          "[NoteValue]")
+{
+    const auto a = CompositeNoteValue(quarterNote);
+    const auto b = CompositeNoteValue({halfNote, quarterNote});
+
+    REQUIRE(a.type() == CompositeNoteValue::single);
+    REQUIRE(b.type() == CompositeNoteValue::tied);
+}
+
 TEST_CASE("Two note values of equal relative value are equivalent", "[NoteValue]")
 {
     SECTION("Symbollically identical note values")

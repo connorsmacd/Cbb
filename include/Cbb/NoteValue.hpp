@@ -105,6 +105,8 @@ constexpr Fraction operator%(const NoteValue& dividend, const NoteValue& divisor
 class CompositeNoteValue final {
 
 public:
+    enum Type { single, tied };
+
     CompositeNoteValue() = default;
     CompositeNoteValue(NoteValueBase base);
     CompositeNoteValue(const NoteValue& value);
@@ -121,6 +123,8 @@ public:
     std::size_t size() const noexcept { return values_.size(); }
 
     Fraction relativeValue() const noexcept;
+
+    Type type() const noexcept;
 
     using Iterator = std::vector<NoteValue>::iterator;
     using ConstIterator = std::vector<NoteValue>::const_iterator;

@@ -63,6 +63,11 @@ Fraction relativeValue(const CompositeNoteValue& value) noexcept
     return value.relativeValue();
 }
 
+CompositeNoteValue::Type CompositeNoteValue::type() const noexcept
+{
+    return (values_.size() > 1) ? tied : single;
+}
+
 bool operator==(const CompositeNoteValue& left, const CompositeNoteValue& right) noexcept
 {
     return relativeValue(left) == relativeValue(right);
