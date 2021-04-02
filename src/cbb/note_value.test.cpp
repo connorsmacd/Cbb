@@ -130,6 +130,31 @@ TEST_CASE("note_value comparison", "[note_value]")
     REQUIRE(note_value(note_value_base::_8th)
             >= note_value(note_value_base::_8th));
 
-    
+    REQUIRE_FALSE(note_value(note_value_base::half, tuplet::triplet)
+                  < note_value(note_value_base::half, tuplet::triplet));
+    REQUIRE(note_value(note_value_base::whole, tuplet::sextuplet)
+            <= note_value(note_value_base::whole, tuplet::sextuplet));
+    REQUIRE_FALSE(note_value(note_value_base::half, tuplet::triplet)
+                  > note_value(note_value_base::half, tuplet::triplet));
+    REQUIRE(note_value(note_value_base::whole, tuplet::sextuplet)
+            >= note_value(note_value_base::whole, tuplet::sextuplet));
+
+    REQUIRE(note_value(note_value_base::_16th)
+            < note_value(note_value_base::_8th));
+    REQUIRE(note_value(note_value_base::_16th)
+            <= note_value(note_value_base::_8th));
+    REQUIRE_FALSE(note_value(note_value_base::_16th)
+                  > note_value(note_value_base::_8th));
+    REQUIRE_FALSE(note_value(note_value_base::_16th)
+                  >= note_value(note_value_base::_8th));
+
+    REQUIRE_FALSE(note_value(note_value_base::_8th)
+                  < note_value(note_value_base::_16th));
+    REQUIRE_FALSE(note_value(note_value_base::_8th)
+                  <= note_value(note_value_base::_16th));
+    REQUIRE(note_value(note_value_base::_8th)
+            > note_value(note_value_base::_16th));
+    REQUIRE(note_value(note_value_base::_8th)
+            >= note_value(note_value_base::_16th));
   }
 }
