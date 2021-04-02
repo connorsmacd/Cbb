@@ -10,28 +10,28 @@ using namespace ieme::fraction_literals;
 
 TEST_CASE("note_value_base relative value", "[note_value]")
 {
-  REQUIRE(relative_value(note_value_base::_256th) == 1 / 256_Fr);
-  REQUIRE(relative_value(note_value_base::_128th) == 1 / 128_Fr);
-  REQUIRE(relative_value(note_value_base::_64th) == 1 / 64_Fr);
-  REQUIRE(relative_value(note_value_base::_32nd) == 1 / 32_Fr);
-  REQUIRE(relative_value(note_value_base::_16th) == 1 / 16_Fr);
-  REQUIRE(relative_value(note_value_base::_8th) == 1 / 8_Fr);
-  REQUIRE(relative_value(note_value_base::quarter) == 1 / 4_Fr);
-  REQUIRE(relative_value(note_value_base::half) == 1 / 2_Fr);
+  REQUIRE(relative_value(note_value_base::_256th) == 1 / 256_fr);
+  REQUIRE(relative_value(note_value_base::_128th) == 1 / 128_fr);
+  REQUIRE(relative_value(note_value_base::_64th) == 1 / 64_fr);
+  REQUIRE(relative_value(note_value_base::_32nd) == 1 / 32_fr);
+  REQUIRE(relative_value(note_value_base::_16th) == 1 / 16_fr);
+  REQUIRE(relative_value(note_value_base::_8th) == 1 / 8_fr);
+  REQUIRE(relative_value(note_value_base::quarter) == 1 / 4_fr);
+  REQUIRE(relative_value(note_value_base::half) == 1 / 2_fr);
   REQUIRE(relative_value(note_value_base::whole) == 1);
   REQUIRE(relative_value(note_value_base::double_whole) == 2);
   REQUIRE(relative_value(note_value_base::quadruple_whole) == 4);
   REQUIRE(relative_value(note_value_base::octuple_whole) == 8);
   REQUIRE(relative_value(note_value_base::demisemihemidemisemiquaver)
-          == 1 / 256_Fr);
+          == 1 / 256_fr);
   REQUIRE(relative_value(note_value_base::semihemidemisemiquaver)
-          == 1 / 128_Fr);
-  REQUIRE(relative_value(note_value_base::hemidemisemiquaver) == 1 / 64_Fr);
-  REQUIRE(relative_value(note_value_base::demisemiquaver) == 1 / 32_Fr);
-  REQUIRE(relative_value(note_value_base::semiquaver) == 1 / 16_Fr);
-  REQUIRE(relative_value(note_value_base::quaver) == 1 / 8_Fr);
-  REQUIRE(relative_value(note_value_base::crotchet) == 1 / 4_Fr);
-  REQUIRE(relative_value(note_value_base::minim) == 1 / 2_Fr);
+          == 1 / 128_fr);
+  REQUIRE(relative_value(note_value_base::hemidemisemiquaver) == 1 / 64_fr);
+  REQUIRE(relative_value(note_value_base::demisemiquaver) == 1 / 32_fr);
+  REQUIRE(relative_value(note_value_base::semiquaver) == 1 / 16_fr);
+  REQUIRE(relative_value(note_value_base::quaver) == 1 / 8_fr);
+  REQUIRE(relative_value(note_value_base::crotchet) == 1 / 4_fr);
+  REQUIRE(relative_value(note_value_base::minim) == 1 / 2_fr);
   REQUIRE(relative_value(note_value_base::semibreve) == 1);
   REQUIRE(relative_value(note_value_base::breve) == 2);
   REQUIRE(relative_value(note_value_base::longa) == 4);
@@ -90,13 +90,13 @@ TEST_CASE("note_value construction", "[note_value]")
 TEST_CASE("note_value relative value", "[note_value]")
 {
   REQUIRE(relative_value(note_value()) == 1);
-  REQUIRE(relative_value(note_value(note_value_base::quarter)) == 1 / 4_Fr);
+  REQUIRE(relative_value(note_value(note_value_base::quarter)) == 1 / 4_fr);
   REQUIRE(relative_value(note_value(note_value_base::_8th, tuplet::triplet))
-          == 1 / 12_Fr);
-  REQUIRE(relative_value(note_value(note_value_base::half, 3)) == 15 / 16_Fr);
+          == 1 / 12_fr);
+  REQUIRE(relative_value(note_value(note_value_base::half, 3)) == 15 / 16_fr);
   REQUIRE(
     relative_value(note_value(note_value_base::_16th, tuplet::quintuplet, 1))
-    == 3 / 80_Fr);
+    == 3 / 80_fr);
 }
 
 TEST_CASE("note_value comparison", "[note_value]")
