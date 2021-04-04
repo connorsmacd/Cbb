@@ -68,9 +68,9 @@ class note_value final {
 public:
   constexpr note_value() noexcept = default;
 
-  constexpr note_value(basic_note_value b,
-                       tuplet t = tuplet::duplet,
-                       dot_count_t num_dots = 0) noexcept;
+  constexpr explicit note_value(basic_note_value b,
+                                tuplet t = tuplet::duplet,
+                                dot_count_t num_dots = 0) noexcept;
 
   constexpr note_value(basic_note_value b, dot_count_t num_dots) noexcept;
 
