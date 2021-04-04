@@ -4,6 +4,7 @@
 #include <cbb/fraction.hpp>
 
 #include <climits>
+#include <vector>
 
 
 namespace cbb {
@@ -95,6 +96,138 @@ constexpr bool operator<(note_value const& l, note_value const& r) noexcept;
 constexpr bool operator<=(note_value const& l, note_value const& r) noexcept;
 constexpr bool operator>(note_value const& l, note_value const& r) noexcept;
 constexpr bool operator>=(note_value const& l, note_value const& r) noexcept;
+
+
+class composite_note_value {
+
+public:
+  using size_type = std::vector<note_value>::size_type;
+  using iterator = std::vector<note_value>::iterator;
+  using const_iterator = std::vector<note_value>::const_iterator;
+  using reverse_iterator = std::vector<note_value>::reverse_iterator;
+  using const_reverse_iterator
+    = std::vector<note_value>::const_reverse_iterator;
+
+  composite_note_value() = default;
+
+  composite_note_value(std::initializer_list<note_value> nvs);
+
+  explicit composite_note_value(note_value const& nv);
+
+  composite_note_value& append(composite_note_value const& cnv);
+
+  composite_note_value& append(note_value const& nv);
+
+  composite_note_value& prepend(composite_note_value const& cnv);
+
+  composite_note_value& prepend(note_value const& nv);
+
+  note_value const& operator[](size_type index) const;
+
+  note_value& operator[](size_type index);
+
+  note_value const& at(size_type index) const;
+
+  note_value& at(size_type index);
+
+  size_type size() const noexcept { return values_.size(); }
+
+  bool is_single() const noexcept { return size() == 1; }
+
+  bool is_tied() const noexcept { return size() > 1; }
+
+  iterator begin() noexcept { return values_.begin(); }
+  const_iterator begin() const noexcept { return values_.begin(); }
+  const_iterator cbegin() const noexcept { return values_.cbegin(); }
+
+  iterator end() noexcept { return values_.end(); }
+  const_iterator end() const noexcept { return values_.end(); }
+  const_iterator cend() const noexcept { return values_.cend(); }
+
+  reverse_iterator rbegin() noexcept { return values_.rbegin(); }
+  const_reverse_iterator rbegin() const noexcept { return values_.rbegin(); }
+  const_reverse_iterator crbegin() const noexcept { return values_.crbegin(); }
+
+  reverse_iterator rend() noexcept { return values_.rend(); }
+  const_reverse_iterator rend() const noexcept { return values_.rend(); }
+  const_reverse_iterator crend() const noexcept { return values_.crend(); }
+
+private:
+  std::vector<note_value> values_ = {note_value()};
+};
+
+fraction relative_value(composite_note_value const& cnv) noexcept;
+
+bool operator==(composite_note_value const& l,
+                composite_note_value const& r) noexcept;
+
+bool operator==(composite_note_value const& l, note_value const& r) noexcept;
+
+bool operator==(note_value const& l, composite_note_value const& r) noexcept;
+
+bool operator!=(composite_note_value const& l,
+                composite_note_value const& r) noexcept;
+
+bool operator!=(composite_note_value const& l, note_value const& r) noexcept;
+
+bool operator!=(note_value const& l, composite_note_value const& r) noexcept;
+
+bool operator<(composite_note_value const& l,
+               composite_note_value const& r) noexcept;
+
+bool operator<(composite_note_value const& l, note_value const& r) noexcept;
+
+bool operator<(note_value const& l, composite_note_value const& r) noexcept;
+
+bool operator<=(composite_note_value const& l,
+                composite_note_value const& r) noexcept;
+
+bool operator<=(composite_note_value const& l, note_value const& r) noexcept;
+
+bool operator<=(note_value const& l, composite_note_value const& r) noexcept;
+
+bool operator>(composite_note_value const& l,
+               composite_note_value const& r) noexcept;
+
+bool operator>(composite_note_value const& l, note_value const& r) noexcept;
+
+bool operator>(note_value const& l, composite_note_value const& r) noexcept;
+
+bool operator>=(composite_note_value const& l,
+                composite_note_value const& r) noexcept;
+
+bool operator>=(composite_note_value const& l, note_value const& r) noexcept;
+
+bool operator>=(note_value const& l, composite_note_value const& r) noexcept;
+
+composite_note_value& operator+=(composite_note_value& l,
+                                 composite_note_value const& r);
+
+composite_note_value& operator+=(composite_note_value& l,
+                                 composite_note_value&& r);
+
+composite_note_value& operator+=(composite_note_value& l, note_value const& r);
+
+composite_note_value operator+(note_value const& l, note_value const& r);
+
+composite_note_value operator+(composite_note_value const& l,
+                               composite_note_value const& r);
+
+composite_note_value operator+(composite_note_value&& l,
+                               composite_note_value const& r);
+
+composite_note_value operator+(composite_note_value const& l,
+                               composite_note_value&& r);
+
+composite_note_value operator+(composite_note_value const& l,
+                               note_value const& r);
+
+composite_note_value operator+(composite_note_value&& l, note_value const& r);
+
+composite_note_value operator+(note_value const& l,
+                               composite_note_value const& r);
+
+composite_note_value operator+(note_value const& l, composite_note_value&& r);
 
 
 // =============================================================================
