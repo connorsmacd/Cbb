@@ -52,7 +52,7 @@ enum class tuplet {
   decuplet,
 };
 
-constexpr fraction factor_of(tuplet t) noexcept;
+constexpr fraction tuplet_factor(tuplet t) noexcept;
 
 
 using dot_count_t = int;
@@ -236,7 +236,7 @@ constexpr fraction relative_value(basic_note_value const bnv) noexcept
   return ieme::pow2<fraction_rep_t, fraction_ops_t>(static_cast<int>(bnv));
 }
 
-constexpr fraction factor_of(tuplet const t) noexcept
+constexpr fraction tuplet_factor(tuplet const t) noexcept
 {
   return {2, static_cast<fraction_rep_t>(t)};
 }
@@ -261,7 +261,7 @@ constexpr note_value::note_value(basic_note_value const b,
 
 constexpr fraction relative_value(note_value const& nv) noexcept
 {
-  return relative_value(nv.get_basic()) * factor_of(nv.get_tuplet())
+  return relative_value(nv.get_basic()) * tuplet_factor(nv.get_tuplet())
          * dot_augmentation(nv.get_num_dots());
 }
 
