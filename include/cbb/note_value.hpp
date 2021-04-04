@@ -10,7 +10,7 @@
 namespace cbb {
 
 
-enum class note_value_base {
+enum class basic_note_value {
   _256th = -8,
   _128th,
   _64th,
@@ -37,7 +37,7 @@ enum class note_value_base {
   maxima = octuple_whole,
 };
 
-constexpr fraction relative_value(note_value_base nvb) noexcept;
+constexpr fraction relative_value(basic_note_value bnv) noexcept;
 
 
 enum class tuplet {
@@ -66,24 +66,22 @@ constexpr fraction dot_augmentation(dot_count_t num_dots) noexcept;
 class note_value final {
 
 public:
-  using base = note_value_base;
-
   constexpr note_value() noexcept = default;
 
-  constexpr note_value(base b,
+  constexpr note_value(basic_note_value b,
                        tuplet t = tuplet::duplet,
                        dot_count_t num_dots = 0) noexcept;
 
-  constexpr note_value(base b, dot_count_t num_dots) noexcept;
+  constexpr note_value(basic_note_value b, dot_count_t num_dots) noexcept;
 
-  constexpr base get_base() const noexcept { return base_; }
+  constexpr basic_note_value get_basic() const noexcept { return basic_; }
 
   constexpr tuplet get_tuplet() const noexcept { return tuplet_; }
 
   constexpr dot_count_t get_num_dots() const noexcept { return num_dots_; }
 
 private:
-  base base_ = base::whole;
+  basic_note_value basic_ = basic_note_value::whole;
   tuplet tuplet_ = tuplet::duplet;
   dot_count_t num_dots_ = 0;
 };
@@ -233,9 +231,9 @@ composite_note_value operator+(note_value const& l, composite_note_value&& r);
 // =============================================================================
 
 
-constexpr fraction relative_value(note_value_base const nvb) noexcept
+constexpr fraction relative_value(basic_note_value const bnv) noexcept
 {
-  return ieme::pow2<fraction_rep_t, fraction_ops_t>(static_cast<int>(nvb));
+  return ieme::pow2<fraction_rep_t, fraction_ops_t>(static_cast<int>(bnv));
 }
 
 constexpr fraction factor_of(tuplet const t) noexcept
@@ -248,14 +246,14 @@ constexpr fraction dot_augmentation(dot_count_t const num_dots) noexcept
   return 2 - ieme::pow2<fraction_rep_t, fraction_ops_t>(-num_dots);
 }
 
-constexpr note_value::note_value(base const b,
+constexpr note_value::note_value(basic_note_value const b,
                                  tuplet const t,
                                  dot_count_t const num_dots) noexcept :
-  base_ {b}, tuplet_ {t}, num_dots_ {num_dots}
+  basic_ {b}, tuplet_ {t}, num_dots_ {num_dots}
 {
 }
 
-constexpr note_value::note_value(base const b,
+constexpr note_value::note_value(basic_note_value const b,
                                  dot_count_t const num_dots) noexcept :
   note_value {b, tuplet::duplet, num_dots}
 {
@@ -263,7 +261,7 @@ constexpr note_value::note_value(base const b,
 
 constexpr fraction relative_value(note_value const& nv) noexcept
 {
-  return relative_value(nv.get_base()) * factor_of(nv.get_tuplet())
+  return relative_value(nv.get_basic()) * factor_of(nv.get_tuplet())
          * dot_augmentation(nv.get_num_dots());
 }
 
