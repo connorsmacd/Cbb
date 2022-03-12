@@ -1,43 +1,12 @@
 #ifndef CBB_NOTE_VALUE_HPP
 #define CBB_NOTE_VALUE_HPP
 
-#include <cbb/fraction.hpp>
+#include <cbb/power_of_2_constants.hpp>
 
-#include <climits>
-#include <vector>
+#include <type_traits>
 
 
 namespace cbb {
-
-
-enum class basic_note_value {
-  _256th = -8,
-  _128th,
-  _64th,
-  _32nd,
-  _16th,
-  _8th,
-  quarter,
-  half,
-  whole,
-  double_whole,
-  quadruple_whole,
-  octuple_whole,
-  demisemihemidemisemiquaver = _256th,
-  semihemidemisemiquaver = _128th,
-  hemidemisemiquaver = _64th,
-  demisemiquaver = _32nd,
-  semiquaver = _16th,
-  quaver = _8th,
-  crotchet = quarter,
-  minim = half,
-  semibreve = whole,
-  breve = double_whole,
-  longa = quadruple_whole,
-  maxima = octuple_whole,
-};
-
-constexpr fraction relative_value(basic_note_value bnv) noexcept;
 
 
 enum class tuplet {
@@ -55,12 +24,14 @@ enum class tuplet {
 constexpr fraction tuplet_factor(tuplet t) noexcept;
 
 
-using dot_count_t = int;
+enum class dot_count {
+  none,
+  single,
+  _double,
+  triple,
+};
 
-static constexpr auto max_num_dots
-  = static_cast<dot_count_t>(sizeof(long long) * CHAR_BIT - 1);
-
-constexpr fraction dot_augmentation(dot_count_t num_dots) noexcept;
+constexpr fraction dot_augmentation(dot_count num_dots) noexcept;
 
 
 class note_value final {
@@ -68,22 +39,28 @@ class note_value final {
 public:
   constexpr note_value() noexcept = default;
 
-  constexpr explicit note_value(basic_note_value b,
-                                tuplet t = tuplet::duplet,
-                                dot_count_t num_dots = 0) noexcept;
+  constexpr explicit note_value(power_of_2 _power_of_2,
+                                tuplet _tuplet = tuplet::duplet,
+                                dot_count num_dots = dot_count::none) noexcept;
 
-  constexpr note_value(basic_note_value b, dot_count_t num_dots) noexcept;
+  constexpr note_value(power_of_2 _power_of_2, dot_count num_dots) noexcept;
 
-  constexpr basic_note_value get_basic() const noexcept { return basic_; }
+  constexpr note_value with(power_of_2 new_power_of_2) const noexcept;
+
+  constexpr note_value with(tuplet new_tuplet) const noexcept;
+
+  constexpr note_value with(dot_count new_num_dots) const noexcept;
+
+  constexpr power_of_2 get_power_of_2() const noexcept { return power_of_2_; }
 
   constexpr tuplet get_tuplet() const noexcept { return tuplet_; }
 
-  constexpr dot_count_t get_num_dots() const noexcept { return num_dots_; }
+  constexpr dot_count get_num_dots() const noexcept { return num_dots_; }
 
 private:
-  basic_note_value basic_ = basic_note_value::whole;
+  power_of_2 power_of_2_ = numbers::_1;
   tuplet tuplet_ = tuplet::duplet;
-  dot_count_t num_dots_ = 0;
+  dot_count num_dots_ = dot_count::none;
 };
 
 constexpr fraction relative_value(note_value const& nv) noexcept;
@@ -95,173 +72,71 @@ constexpr bool operator<=(note_value const& l, note_value const& r) noexcept;
 constexpr bool operator>(note_value const& l, note_value const& r) noexcept;
 constexpr bool operator>=(note_value const& l, note_value const& r) noexcept;
 
+constexpr note_value operator*(note_value const& l, power_of_2 r) noexcept;
+constexpr note_value operator*(power_of_2 l, note_value const& r) noexcept;
 
-class composite_note_value {
+constexpr fraction operator/(note_value const& l, note_value const& r) noexcept;
+constexpr note_value operator/(note_value const& l, power_of_2 r) noexcept;
 
-public:
-  using size_type = std::vector<note_value>::size_type;
-  using iterator = std::vector<note_value>::iterator;
-  using const_iterator = std::vector<note_value>::const_iterator;
-  using reverse_iterator = std::vector<note_value>::reverse_iterator;
-  using const_reverse_iterator
-    = std::vector<note_value>::const_reverse_iterator;
-
-  composite_note_value() = default;
-
-  composite_note_value(std::initializer_list<note_value> nvs);
-
-  explicit composite_note_value(note_value const& nv);
-
-  composite_note_value& append(composite_note_value const& cnv);
-
-  composite_note_value& append(note_value const& nv);
-
-  composite_note_value& prepend(composite_note_value const& cnv);
-
-  composite_note_value& prepend(note_value const& nv);
-
-  note_value const& operator[](size_type index) const;
-
-  note_value& operator[](size_type index);
-
-  note_value const& at(size_type index) const;
-
-  note_value& at(size_type index);
-
-  size_type size() const noexcept { return values_.size(); }
-
-  bool is_single() const noexcept { return size() == 1; }
-
-  bool is_tied() const noexcept { return size() > 1; }
-
-  iterator begin() noexcept { return values_.begin(); }
-  const_iterator begin() const noexcept { return values_.begin(); }
-  const_iterator cbegin() const noexcept { return values_.cbegin(); }
-
-  iterator end() noexcept { return values_.end(); }
-  const_iterator end() const noexcept { return values_.end(); }
-  const_iterator cend() const noexcept { return values_.cend(); }
-
-  reverse_iterator rbegin() noexcept { return values_.rbegin(); }
-  const_reverse_iterator rbegin() const noexcept { return values_.rbegin(); }
-  const_reverse_iterator crbegin() const noexcept { return values_.crbegin(); }
-
-  reverse_iterator rend() noexcept { return values_.rend(); }
-  const_reverse_iterator rend() const noexcept { return values_.rend(); }
-  const_reverse_iterator crend() const noexcept { return values_.crend(); }
-
-private:
-  std::vector<note_value> values_ = {note_value()};
-};
-
-fraction relative_value(composite_note_value const& cnv) noexcept;
-
-bool operator==(composite_note_value const& l,
-                composite_note_value const& r) noexcept;
-
-bool operator==(composite_note_value const& l, note_value const& r) noexcept;
-
-bool operator==(note_value const& l, composite_note_value const& r) noexcept;
-
-bool operator!=(composite_note_value const& l,
-                composite_note_value const& r) noexcept;
-
-bool operator!=(composite_note_value const& l, note_value const& r) noexcept;
-
-bool operator!=(note_value const& l, composite_note_value const& r) noexcept;
-
-bool operator<(composite_note_value const& l,
-               composite_note_value const& r) noexcept;
-
-bool operator<(composite_note_value const& l, note_value const& r) noexcept;
-
-bool operator<(note_value const& l, composite_note_value const& r) noexcept;
-
-bool operator<=(composite_note_value const& l,
-                composite_note_value const& r) noexcept;
-
-bool operator<=(composite_note_value const& l, note_value const& r) noexcept;
-
-bool operator<=(note_value const& l, composite_note_value const& r) noexcept;
-
-bool operator>(composite_note_value const& l,
-               composite_note_value const& r) noexcept;
-
-bool operator>(composite_note_value const& l, note_value const& r) noexcept;
-
-bool operator>(note_value const& l, composite_note_value const& r) noexcept;
-
-bool operator>=(composite_note_value const& l,
-                composite_note_value const& r) noexcept;
-
-bool operator>=(composite_note_value const& l, note_value const& r) noexcept;
-
-bool operator>=(note_value const& l, composite_note_value const& r) noexcept;
-
-composite_note_value& operator+=(composite_note_value& l,
-                                 composite_note_value const& r);
-
-composite_note_value& operator+=(composite_note_value& l,
-                                 composite_note_value&& r);
-
-composite_note_value& operator+=(composite_note_value& l, note_value const& r);
-
-composite_note_value operator+(note_value const& l, note_value const& r);
-
-composite_note_value operator+(composite_note_value const& l,
-                               composite_note_value const& r);
-
-composite_note_value operator+(composite_note_value&& l,
-                               composite_note_value const& r);
-
-composite_note_value operator+(composite_note_value const& l,
-                               composite_note_value&& r);
-
-composite_note_value operator+(composite_note_value const& l,
-                               note_value const& r);
-
-composite_note_value operator+(composite_note_value&& l, note_value const& r);
-
-composite_note_value operator+(note_value const& l,
-                               composite_note_value const& r);
-
-composite_note_value operator+(note_value const& l, composite_note_value&& r);
+constexpr fraction operator%(note_value const& l, note_value const& r) noexcept;
 
 
 // =============================================================================
 
 
-constexpr fraction relative_value(basic_note_value const bnv) noexcept
+namespace detail {
+template <typename EnumT>
+constexpr std::underlying_type_t<EnumT> to_underlying(EnumT const e)
 {
-  return ieme::pow2<fraction_rep_t, fraction_ops_t>(static_cast<int>(bnv));
+  return static_cast<std::underlying_type_t<EnumT>>(e);
 }
+} // namespace detail
 
 constexpr fraction tuplet_factor(tuplet const t) noexcept
 {
-  return {2, static_cast<fraction_rep_t>(t)};
+  return {2, detail::to_underlying(t)};
 }
 
-constexpr fraction dot_augmentation(dot_count_t const num_dots) noexcept
+constexpr fraction dot_augmentation(dot_count const num_dots) noexcept
 {
-  return 2 - ieme::pow2<fraction_rep_t, fraction_ops_t>(-num_dots);
+  return 2
+         - power_of_2(power_of_2::from_exponent,
+                      -detail::to_underlying(num_dots));
 }
 
-constexpr note_value::note_value(basic_note_value const b,
-                                 tuplet const t,
-                                 dot_count_t const num_dots) noexcept :
-  basic_ {b}, tuplet_ {t}, num_dots_ {num_dots}
+constexpr note_value::note_value(power_of_2 const _power_of_2,
+                                 tuplet const _tuplet,
+                                 dot_count const num_dots) noexcept :
+  power_of_2_ {_power_of_2}, tuplet_ {_tuplet}, num_dots_ {num_dots}
 {
 }
 
-constexpr note_value::note_value(basic_note_value const b,
-                                 dot_count_t const num_dots) noexcept :
-  note_value {b, tuplet::duplet, num_dots}
+constexpr note_value::note_value(power_of_2 const _power_of_2,
+                                 dot_count const num_dots) noexcept :
+  note_value {_power_of_2, tuplet::duplet, num_dots}
 {
+}
+
+constexpr note_value
+note_value::with(power_of_2 const new_power_of_2) const noexcept
+{
+  return note_value(new_power_of_2, tuplet_, num_dots_);
+}
+
+constexpr note_value note_value::with(tuplet const new_tuplet) const noexcept
+{
+  return note_value(power_of_2_, new_tuplet, num_dots_);
+}
+
+constexpr note_value
+note_value::with(dot_count const new_num_dots) const noexcept
+{
+  return note_value(power_of_2_, tuplet_, new_num_dots);
 }
 
 constexpr fraction relative_value(note_value const& nv) noexcept
 {
-  return relative_value(nv.get_basic()) * tuplet_factor(nv.get_tuplet())
+  return nv.get_power_of_2() * tuplet_factor(nv.get_tuplet())
          * dot_augmentation(nv.get_num_dots());
 }
 
@@ -293,6 +168,31 @@ constexpr bool operator>(note_value const& l, note_value const& r) noexcept
 constexpr bool operator>=(note_value const& l, note_value const& r) noexcept
 {
   return !(l < r);
+}
+
+constexpr note_value operator*(note_value const& l, power_of_2 const r) noexcept
+{
+  return l.with(l.get_power_of_2() * r);
+}
+
+constexpr note_value operator*(power_of_2 const l, note_value const& r) noexcept
+{
+  return r * l;
+}
+
+constexpr fraction operator/(note_value const& l, note_value const& r) noexcept
+{
+  return relative_value(l) / relative_value(r);
+}
+
+constexpr note_value operator/(note_value const& l, power_of_2 const r) noexcept
+{
+  return l.with(l.get_power_of_2() / r);
+}
+
+constexpr fraction operator%(note_value const& l, note_value const& r) noexcept
+{
+  return relative_value(l) % relative_value(r);
 }
 
 

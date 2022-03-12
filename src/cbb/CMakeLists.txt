@@ -1,6 +1,10 @@
 find_package(Ieme REQUIRED)
 
-add_library(${PROJECT_NAME} note_value.cpp)
+add_library(${PROJECT_NAME}
+  note_value.cpp
+  note_value_constants.cpp
+  power_of_2.cpp
+  power_of_2_constants.cpp)
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
@@ -15,5 +19,9 @@ if (${CBB_BUILD_TESTS})
   add_executable(note_value_test note_value.test.cpp)
   target_link_libraries(note_value_test PUBLIC ${PROJECT_NAME} Catch2::Catch2)
   add_test(NAME note_value_test COMMAND note_value_test)
+
+  add_executable(power_of_2_test power_of_2.test.cpp)
+  target_link_libraries(power_of_2_test PUBLIC ${PROJECT_NAME} Catch2::Catch2)
+  add_test(NAME power_of_2_test COMMAND power_of_2_test)
 
 endif()
